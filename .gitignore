@@ -1,0 +1,25 @@
+.DS_Store
+.env
+.python-version
+.pytest_cache/
+.venv/
+*.pyc
+*.pyo
+Thumbs.db
+.DS_Store
+.project
+.pydevproject
+.settings
+.idea
+.vslick
+.cache
+__pycache__/
+docs/_build/
+.vscode
+/dist/
+/zeroconf.egg-info/
+.coverage
+.ruff_cache/
+.mypy_cache/
+### ignore docs until they're worth reading
+docs/

@@ -1,0 +1,45 @@
+[project]
+name = "pyhuec"
+version = "0.1.0"
+description = "Philips Hue API V2 Async Client"
+readme = "README.md"
+authors = [
+    { name = "dewskii", email = "eric@daviddew.com" }
+]
+requires-python =  ">=3.10"
+dependencies = [
+    "dacite>=1.9.2",
+    "dataclasses-json>=0.6.7",
+    "dotenv>=0.9.9",
+    "httpx==0.23.3",
+    "pydantic>=2.12.5",
+    "randomname>=0.2.1",
+    "zeroconf>=0.148.0",
+]
+
+[build-system]
+requires = ["uv_build>=0.9.25,<0.10.0"]
+build-backend = "uv_build"
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.uv.workspace]
+members = [
+    ".",
+    ".",
+]
+
+[tool.uv.sources]
+pyhuec = { workspace = true }
+
+[dependency-groups]
+dev = [
+    "isort>=7.0.0",
+    "pre-commit>=4.5.1",
+    "pyhuec",
+    "pytest>=9.0.2",
+    "pytest-asyncio>=1.3.0",
+    "pytest-cov>=7.0.0",
+    "ruff>=0.14.13",
+]
