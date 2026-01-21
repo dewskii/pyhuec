@@ -4,6 +4,28 @@ These protocols define interface contracts for repositories, services, and contr
 """
 
 # Light protocols
+# Bridge protocols
+from .bridge_protocol import (
+    BridgeControllerProtocol,
+    BridgeDiscoveryProtocol,
+    BridgeEventStreamProtocol,
+    BridgeRepositoryProtocol,
+    BridgeServiceProtocol,
+)
+
+# Device protocols
+from .device_protocol import (
+    DeviceControllerProtocol,
+    DeviceRepositoryProtocol,
+    DeviceServiceProtocol,
+)
+
+# Grouped Light protocols
+from .grouped_light_protocol import (
+    GroupedLightControllerProtocol,
+    GroupedLightRepositoryProtocol,
+    GroupedLightServiceProtocol,
+)
 from .light_protocol import (
     LightControllerProtocol,
     LightRepositoryProtocol,
@@ -22,29 +44,6 @@ from .scene_protocol import (
     SceneControllerProtocol,
     SceneRepositoryProtocol,
     SceneServiceProtocol,
-)
-
-# Device protocols
-from .device_protocol import (
-    DeviceControllerProtocol,
-    DeviceRepositoryProtocol,
-    DeviceServiceProtocol,
-)
-
-# Grouped Light protocols
-from .grouped_light_protocol import (
-    GroupedLightControllerProtocol,
-    GroupedLightRepositoryProtocol,
-    GroupedLightServiceProtocol,
-)
-
-# Bridge protocols
-from .bridge_protocol import (
-    BridgeControllerProtocol,
-    BridgeDiscoveryProtocol,
-    BridgeEventStreamProtocol,
-    BridgeRepositoryProtocol,
-    BridgeServiceProtocol,
 )
 
 # Transport protocols

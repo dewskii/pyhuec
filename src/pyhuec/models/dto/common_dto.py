@@ -5,61 +5,73 @@ Based on: https://developers.meethue.com/develop/hue-api-v2/api-reference/
 """
 
 from typing import Any, Dict, Generic, List, Optional, TypeVar
-from pydantic import BaseModel, Field
 
+from pydantic import BaseModel, Field
 
 # ===== Resource Reference =====
 
+
 class ResourceIdentifierDTO(BaseModel):
     """Reference to another resource by ID and type."""
+
     rid: str = Field(description="Resource ID (UUID)")
     rtype: str = Field(
         description="Resource type (light, room, scene, device, etc.)",
-        pattern="^(device|bridge_home|room|zone|light|button|relative_rotary|temperature|light_level|motion|camera_motion|entertainment|contact|tamper|grouped_light|device_power|zigbee_bridge_connectivity|zgp_connectivity|zigbee_connectivity|zdp_connectivity|bridge|zigbee_device_discovery|homekit|matter|matter_fabric|scene|entertainment_configuration|public_image|auth_v1|behavior_script|behavior_instance|geofence|geofence_client|geolocation)$"
+        pattern="^(device|bridge_home|room|zone|light|button|relative_rotary|temperature|light_level|motion|camera_motion|entertainment|contact|tamper|grouped_light|device_power|zigbee_bridge_connectivity|zgp_connectivity|zigbee_connectivity|zdp_connectivity|bridge|zigbee_device_discovery|homekit|matter|matter_fabric|scene|entertainment_configuration|public_image|auth_v1|behavior_script|behavior_instance|geofence|geofence_client|geolocation)$",
     )
 
 
 # ===== Error Handling =====
 
+
 class ApiErrorDTO(BaseModel):
     """Individual error in an API response."""
+
     description: str = Field(description="Human-readable error description")
     type: Optional[int] = Field(None, description="Numeric error type (legacy)")
-    address: Optional[str] = Field(None, description="Resource address where error occurred")
+    address: Optional[str] = Field(
+        None, description="Resource address where error occurred"
+    )
 
 
 class ErrorResponseDTO(BaseModel):
     """Error response from the API."""
+
     errors: List[ApiErrorDTO]
 
 
 # ===== Generic Response Wrappers =====
 
-T = TypeVar('T')
+T = TypeVar("T")
 
 
 class ApiResponseDTO(BaseModel, Generic[T]):
     """Generic API response wrapper with errors and data."""
+
     errors: List[ApiErrorDTO] = Field(default_factory=list)
     data: List[T] = Field(default_factory=list)
 
 
 class SingleResourceResponseDTO(BaseModel, Generic[T]):
     """Response containing a single resource."""
+
     errors: List[ApiErrorDTO] = Field(default_factory=list)
     data: List[T]  # API always returns an array, even for single resources
 
 
 class ResourceListResponseDTO(BaseModel, Generic[T]):
     """Response containing a list of resources."""
+
     errors: List[ApiErrorDTO] = Field(default_factory=list)
     data: List[T]
 
 
 # ===== Bridge Configuration =====
 
+
 class BridgeConfigDTO(BaseModel):
     """Bridge configuration information."""
+
     name: str
     swversion: str
     apiversion: str
@@ -74,6 +86,7 @@ class BridgeConfigDTO(BaseModel):
 
 class BridgeResponseDTO(BaseModel):
     """Bridge resource response."""
+
     id: str
     bridge_id: str
     time_zone: Dict[str, str]
@@ -85,8 +98,10 @@ class BridgeResponseDTO(BaseModel):
 
 # ===== Event Streaming =====
 
+
 class EventDTO(BaseModel):
     """Server-Sent Event from the Hue bridge."""
+
     creationtime: str = Field(description="ISO 8601 timestamp")
     id: str = Field(description="Event ID (UUID)")
     type: str = Field(description="Event type (update, add, delete)")
@@ -95,8 +110,10 @@ class EventDTO(BaseModel):
 
 # ===== Entertainment =====
 
+
 class EntertainmentChannelDTO(BaseModel):
     """Entertainment channel configuration."""
+
     channel_id: int = Field(ge=0, le=255)
     position: Dict[str, float] = Field(
         description="3D position with x, y, z coordinates"
@@ -106,6 +123,7 @@ class EntertainmentChannelDTO(BaseModel):
 
 class EntertainmentConfigurationDTO(BaseModel):
     """Entertainment configuration for synchronized lighting."""
+
     id: str
     metadata: Dict[str, str]
     name: str
@@ -121,8 +139,10 @@ class EntertainmentConfigurationDTO(BaseModel):
 
 # ===== Button/Switch Events =====
 
+
 class ButtonEventDTO(BaseModel):
     """Button press event data."""
+
     id: str
     id_v1: Optional[str] = None
     owner: ResourceIdentifierDTO
@@ -133,8 +153,10 @@ class ButtonEventDTO(BaseModel):
 
 # ===== Sensor Data =====
 
+
 class MotionSensorDTO(BaseModel):
     """Motion sensor data."""
+
     id: str
     id_v1: Optional[str] = None
     owner: ResourceIdentifierDTO
@@ -145,6 +167,7 @@ class MotionSensorDTO(BaseModel):
 
 class TemperatureSensorDTO(BaseModel):
     """Temperature sensor data."""
+
     id: str
     id_v1: Optional[str] = None
     owner: ResourceIdentifierDTO
@@ -155,6 +178,7 @@ class TemperatureSensorDTO(BaseModel):
 
 class LightLevelSensorDTO(BaseModel):
     """Light level sensor data."""
+
     id: str
     id_v1: Optional[str] = None
     owner: ResourceIdentifierDTO
@@ -165,20 +189,26 @@ class LightLevelSensorDTO(BaseModel):
 
 # ===== ZigBee Connectivity =====
 
+
 class ZigbeeConnectivityDTO(BaseModel):
     """ZigBee connectivity status."""
+
     id: str
     id_v1: Optional[str] = None
     owner: ResourceIdentifierDTO
-    status: str = Field(pattern="^(connected|disconnected|connectivity_issue|unidirectional_incoming)$")
+    status: str = Field(
+        pattern="^(connected|disconnected|connectivity_issue|unidirectional_incoming)$"
+    )
     mac_address: str
     type: str = Field(default="zigbee_connectivity")
 
 
 # ===== Device Power =====
 
+
 class DevicePowerDTO(BaseModel):
     """Device power status."""
+
     id: str
     id_v1: Optional[str] = None
     owner: ResourceIdentifierDTO
@@ -188,8 +218,10 @@ class DevicePowerDTO(BaseModel):
 
 # ===== Homekit =====
 
+
 class HomekitDTO(BaseModel):
     """HomeKit configuration."""
+
     id: str
     status: str = Field(pattern="^(paired|pairing|unpaired)$")
     type: str = Field(default="homekit")
@@ -197,8 +229,10 @@ class HomekitDTO(BaseModel):
 
 # ===== Resource Discovery =====
 
+
 class ResourceDTO(BaseModel):
     """Generic resource representation."""
+
     id: str
     type: str
     data: Dict[str, Any] = Field(default_factory=dict)
@@ -209,5 +243,6 @@ class ResourceDTO(BaseModel):
 
 class ResourceCollectionDTO(BaseModel):
     """Collection of all resources."""
+
     errors: List[ApiErrorDTO] = Field(default_factory=list)
     data: List[ResourceDTO]

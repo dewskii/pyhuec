@@ -1,23 +1,29 @@
-import os
-import logging
 import asyncio
+import logging
+import os
+from typing import Any, Dict, List, Optional
+
 from dotenv import load_dotenv
 from zeroconf import IPVersion, ServiceStateChange
 from zeroconf.asyncio import AsyncServiceBrowser, AsyncServiceInfo, AsyncZeroconf
+
 from pyhuec import MdnsClientProtocol
-from typing import Any, Dict, Optional, List
 
 logger = logging.getLogger(__name__)
+load_dotenv()
+
 
 class MdnsClient(MdnsClientProtocol):
     """Protocol for mDNS (multicast DNS) service discovery."""
-    
-    def __init__(self, ) -> None:
+
+    def __init__(
+        self,
+    ) -> None:
         self.aiobrowser: AsyncServiceBrowser | None = None
         self.aiozc: AsyncZeroconf | None = None
         self.services: Dict[str, AsyncServiceInfo] = {}
         self.service_type = os.environ["TARGET_MDNS"]
-    
+
     def _handler(
         self,
         zeroconf,
@@ -27,7 +33,7 @@ class MdnsClient(MdnsClientProtocol):
     ) -> None:
         """
         Handle mDNS service events and async eventloop
-        
+
         Args:
             zeroconf: Asynczeroconf
             service_type: String
@@ -44,7 +50,6 @@ class MdnsClient(MdnsClientProtocol):
             return
         asyncio.create_task(self._resolve_services(zeroconf, service_type, name))
 
-
     async def discover_services(
         self,
         service_type: str = "_hue._tcp.local.",
@@ -52,11 +57,11 @@ class MdnsClient(MdnsClientProtocol):
     ) -> list[Dict[str, Any]]:
         """
         Discover services using mDNS.
-        
+
         Args:
             service_type: mDNS service type to discover
             timeout: Discovery timeout in seconds
-            
+
         Returns:
             List of discovered services with addresses and ports
         """
@@ -78,11 +83,11 @@ class MdnsClient(MdnsClientProtocol):
             ips.extend(info.parsed_addresses(version=IPVersion.V4Only))
         return sorted(set(ips))
         ...
-    
+
     async def resolve_hostname(self, zeroconf, service_type: str, name: str) -> None:
         """
         Resolve hostname to IP address using mDNS, adding to the service store.
-        
+
         Args:
             zeroconf: AsyncZeroconf configuration for service resolution
             service_type: String representation of the mDNS address to search for
@@ -95,4 +100,3 @@ class MdnsClient(MdnsClientProtocol):
         logger.debug(f"RESOLVED {name} {info}")
         if info:
             self.services[name] = info
-        
