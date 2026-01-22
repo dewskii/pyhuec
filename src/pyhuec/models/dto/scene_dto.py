@@ -86,7 +86,7 @@ class ActionDTO(BaseModel):
     effects: Optional[EffectsDTO] = None
     dynamics: Optional[DynamicsDTO] = None
 
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra="allow")
 
 
 class PaletteColorDTO(BaseModel):

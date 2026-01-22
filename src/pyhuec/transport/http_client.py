@@ -11,14 +11,40 @@ class HttpClient(HttpClientProtocol):
     def __init__(
         self,
         base_url: str,
-        client: httpx.AsyncClient = httpx.AsyncClient,
-        timeout: float = 3.0,
+        client: Optional[httpx.AsyncClient] = None,
+        timeout: float = 10.0,
         verify: bool = False,
     ):
-        self.client = (
-            client if client else httpx.AsyncClient(verify=verify, timeout=timeout)
-        )
+        if client is not None:
+            self.client = client
+        else:
+            self.client = httpx.AsyncClient(
+                verify=verify,
+                timeout=httpx.Timeout(timeout),
+                follow_redirects=True
+            )
         self.base_url = base_url
+        self._auth_token: Optional[str] = None
+        self._timeout = timeout
+
+    def set_base_url(self, base_url: str) -> None:
+        """Set the base URL for API requests."""
+        self.base_url = base_url
+
+    def set_auth_token(self, token: str) -> None:
+        """Set the authentication token for API requests."""
+        self._auth_token = token
+
+    def set_timeout(self, timeout: float) -> None:
+        """Set the request timeout."""
+        self._timeout = timeout
+
+    def _get_headers(self, headers: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+        """Build headers with auth token."""
+        merged_headers = headers.copy() if headers else {}
+        if self._auth_token:
+            merged_headers["hue-application-key"] = self._auth_token
+        return merged_headers
 
     async def get(
         self,
@@ -36,15 +62,18 @@ class HttpClient(HttpClientProtocol):
         Returns:
             Response data as dictionary
         """
-        return self.client.get(
-            url=f"{self.base_url}{endpoint}", params=params, headers=headers
+        response = await self.client.get(
+            url=f"{self.base_url}{endpoint}", 
+            params=params, 
+            headers=self._get_headers(headers)
         )
+        return response.json()
 
     async def post(
         self,
         endpoint: str,
-        params: str,
-        headers: Optional[Dict[str, Any]],
+        params: Optional[str] = None,
+        headers: Optional[Dict[str, Any]] = None,
         body: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
         """
@@ -58,15 +87,19 @@ class HttpClient(HttpClientProtocol):
         Returns:
             Response data as dictionary
         """
-        return self.client.post(
-            url=f"{self.base_url}{endpoint}", params=params, headers=headers, json=body
+        response = await self.client.post(
+            url=f"{self.base_url}{endpoint}", 
+            params=params, 
+            headers=self._get_headers(headers), 
+            json=body
         )
+        return response.json()
 
     async def put(
         self,
         endpoint: str,
-        params: str,
-        headers: Optional[Dict[str, Any]],
+        headers: Optional[Dict[str, Any]] = None,
+        params: Optional[str] = None,
         body: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
         """
@@ -80,9 +113,13 @@ class HttpClient(HttpClientProtocol):
         Returns:
             Response data as dictionary
         """
-        return self.client.put(
-            url=f"{self.base_url}{endpoint}", params=params, headers=headers, json=body
+        response = await self.client.put(
+            url=f"{self.base_url}{endpoint}", 
+            params=params, 
+            headers=self._get_headers(headers), 
+            json=body
         )
+        return response.json()
 
     async def delete(self, endpoint: str) -> Dict[str, Any]:
         """
@@ -94,4 +131,5 @@ class HttpClient(HttpClientProtocol):
         Returns:
             Response data as dictionary
         """
-        return self.client
+        response = await self.client.delete(url=f"{self.base_url}{endpoint}")
+        return response.json()

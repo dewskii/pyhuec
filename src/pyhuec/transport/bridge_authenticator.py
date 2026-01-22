@@ -1,8 +1,5 @@
 """
 Bridge authentication helper for generating and managing API keys.
-
-This module handles the authentication flow with the Hue Bridge,
-including the button press requirement and API key generation.
 """
 
 import asyncio
@@ -70,21 +67,13 @@ class BridgeAuthenticator:
         else:
             load_dotenv()
 
-        api_key = os.getenv("HUE_USER")
 
         if api_key:
             logger.info("Found existing API key in environment")
             if await self._validate_api_key(api_key):
                 return api_key
             else:
-                logger.warning("Existing API key is invalid, will request new one")
-
-        logger.info("No valid API key found, requesting new one from bridge")
-
-        if interactive:
-            api_key = await self._request_api_key_interactive()
-        else:
-            api_key = await self._request_api_key_non_interactive()
+                api_key = await self._request_api_key_interactive()
 
         if env_file is None:
             env_file = Path.cwd() / ".env"
@@ -111,7 +100,7 @@ class BridgeAuthenticator:
             )
             return response.status_code == 200
         except Exception as e:
-            logger.debug(f"API key validation failed: {e}")
+            logger.warning(f"API key validation failed: {e}")
             return False
 
     async def _request_api_key_interactive(self) -> str:
@@ -124,14 +113,6 @@ class BridgeAuthenticator:
         Raises:
             RuntimeError: If key generation fails
         """
-        print("\n" + "=" * 60)
-        print("🔐 Hue Bridge Authentication Required")
-        print("=" * 60)
-        print(f"\nTo authenticate with your Hue Bridge at {self._bridge_ip}:")
-        print("1. Press the large button on top of your Hue Bridge")
-        print("2. You have 30 seconds to press the button")
-        print("3. Press Enter here when ready to continue...")
-        print("\n" + "=" * 60 + "\n")
 
         input("Press Enter to continue after pressing the bridge button: ")
 
@@ -177,7 +158,7 @@ class BridgeAuthenticator:
 
                         if "success" in first_item:
                             api_key = first_item["success"]["username"]
-                            logger.info("✅ Successfully obtained API key from bridge")
+                            logger.info("Successfully obtained API key from bridge")
                             return api_key
 
                         if "error" in first_item:
@@ -221,15 +202,12 @@ class BridgeAuthenticator:
 
             set_key(str(env_file), "HUE_USER", api_key)
 
-            logger.info(f"💾 API key saved to {env_file}")
-            print(f"\n✅ API key saved to {env_file}")
-            print(f"   You won't need to press the button again!\n")
+            logger.info(f"API key saved to {env_file}")
 
         except Exception as e:
             logger.error(f"Failed to save API key to .env file: {e}")
-            print(f"\n⚠️  Could not save API key to file: {e}")
-            print(f"   Your API key is: {api_key}")
-            print(f"   Please save it manually to continue using the client.\n")
+            logger.warning(f"Your API key is: {api_key}")
+            logger.warning("Please save it manually to continue using the client.")
 
     async def close(self) -> None:
         """Close the HTTP client."""

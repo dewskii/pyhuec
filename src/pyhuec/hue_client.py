@@ -16,6 +16,7 @@ from pyhuec.models.dto.event_dto import (
     ResourceType,
 )
 from pyhuec.models.dto.light_dto import (
+    DimmingDTO,
     LightListResponseDTO,
     LightResponseDTO,
     LightUpdateDTO,
@@ -155,7 +156,7 @@ class HueClient:
 
         if self._state_manager:
             self._state_manager.update_from_rest(
-                ResourceType.LIGHT, light_id, response.data[0]
+                ResourceType.LIGHT, light_id, response
             )
 
         return response
@@ -179,7 +180,7 @@ class HueClient:
         """
         update = LightUpdateDTO(on={"on": True})
         if brightness is not None:
-            update.dimming = {"brightness": brightness}
+            update.dimming = DimmingDTO(brightness=brightness)
 
         await self.update_light(light_id, update)
 

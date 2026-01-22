@@ -34,7 +34,7 @@ class GroupedLightRepository(GroupedLightRepositoryProtocol):
         response = await self._client.get(
             f"/clip/v2/resource/grouped_light/{grouped_light_id}"
         )
-        return GroupedLightResponseDTO(**response)
+        return GroupedLightResponseDTO(**response["data"][0])
 
     async def get_grouped_lights(self) -> GroupedLightListResponseDTO:
         """Get all grouped lights.
