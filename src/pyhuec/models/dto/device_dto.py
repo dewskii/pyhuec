@@ -5,7 +5,7 @@ Based on: https://developers.meethue.com/develop/hue-api-v2/api-reference/
 
 from typing import Any, Dict, List, Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class ResourceIdentifierDTO(BaseModel):
@@ -45,7 +45,7 @@ class UserTestDTO(BaseModel):
     usertest: bool
 
 
-# ===== Request DTOs =====
+
 
 
 class DeviceUpdateDTO(BaseModel):
@@ -56,8 +56,7 @@ class DeviceUpdateDTO(BaseModel):
         None, description="Enable/disable user test mode for device identification"
     )
 
-    class Config:
-        extra = "forbid"
+    model_config = ConfigDict(extra="forbid")
 
 
 class DeviceIdentifyDTO(BaseModel):
@@ -68,7 +67,7 @@ class DeviceIdentifyDTO(BaseModel):
     )
 
 
-# ===== Response DTOs =====
+
 
 
 class DeviceResponseDTO(BaseModel):
@@ -85,8 +84,7 @@ class DeviceResponseDTO(BaseModel):
     usertest: Optional[UserTestDTO] = None
     type: str = Field(default="device")
 
-    class Config:
-        extra = "allow"
+    model_config = ConfigDict(extra="allow")
 
 
 class DeviceListResponseDTO(BaseModel):
@@ -108,3 +106,94 @@ class DeviceDeleteResponseDTO(BaseModel):
 
     errors: List[Dict[str, Any]] = Field(default_factory=list)
     data: List[ResourceIdentifierDTO]
+
+
+
+
+
+class ButtonEventDTO(BaseModel):
+    """Button press event data."""
+
+    id: str
+    id_v1: Optional[str] = None
+    owner: ResourceIdentifierDTO
+    metadata: Dict[str, str]
+    button: Dict[str, Any]
+    type: str = Field(default="button")
+
+
+
+
+
+class MotionSensorDTO(BaseModel):
+    """Motion sensor data."""
+
+    id: str
+    id_v1: Optional[str] = None
+    owner: ResourceIdentifierDTO
+    enabled: bool
+    motion: Dict[str, Any]
+    type: str = Field(default="motion")
+
+
+class TemperatureSensorDTO(BaseModel):
+    """Temperature sensor data."""
+
+    id: str
+    id_v1: Optional[str] = None
+    owner: ResourceIdentifierDTO
+    enabled: bool
+    temperature: Dict[str, float]
+    type: str = Field(default="temperature")
+
+
+class LightLevelSensorDTO(BaseModel):
+    """Light level sensor data."""
+
+    id: str
+    id_v1: Optional[str] = None
+    owner: ResourceIdentifierDTO
+    enabled: bool
+    light: Dict[str, Any]
+    type: str = Field(default="light_level")
+
+
+
+
+
+class ZigbeeConnectivityDTO(BaseModel):
+    """ZigBee connectivity status."""
+
+    id: str
+    id_v1: Optional[str] = None
+    owner: ResourceIdentifierDTO
+    status: str = Field(
+        pattern="^(connected|disconnected|connectivity_issue|unidirectional_incoming)$"
+    )
+    mac_address: str
+    type: str = Field(default="zigbee_connectivity")
+
+
+
+
+
+class DevicePowerDTO(BaseModel):
+    """Device power status."""
+
+    id: str
+    id_v1: Optional[str] = None
+    owner: ResourceIdentifierDTO
+    power_state: Dict[str, Any]
+    type: str = Field(default="device_power")
+
+
+
+
+
+class HomekitDTO(BaseModel):
+    """HomeKit configuration."""
+
+    id: str
+    status: str = Field(pattern="^(paired|pairing|unpaired)$")
+    type: str = Field(default="homekit")
+

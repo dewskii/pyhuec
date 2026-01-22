@@ -5,9 +5,9 @@ Based on: https://developers.meethue.com/develop/hue-api-v2/api-reference/
 
 from typing import Any, Dict, List, Optional
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
-# ===== Nested Models =====
+
 
 
 class ResourceIdentifierDTO(BaseModel):
@@ -232,7 +232,7 @@ class ProductDataDTO(BaseModel):
     function: Optional[str] = Field(None, pattern="^(functional|decorative|mixed)$")
 
 
-# ===== Request DTOs =====
+
 
 
 class LightUpdateDTO(BaseModel):
@@ -255,8 +255,7 @@ class LightUpdateDTO(BaseModel):
     powerup: Optional[PowerupDTO] = None
     content_configuration: Optional[ContentConfigurationDTO] = None
 
-    class Config:
-        extra = "forbid"
+    model_config = ConfigDict(extra="forbid")
 
 
 class LightIdentifyDTO(BaseModel):
@@ -267,7 +266,7 @@ class LightIdentifyDTO(BaseModel):
     )
 
 
-# ===== Response DTOs =====
+
 
 
 class LightResponseDTO(BaseModel):
@@ -276,7 +275,7 @@ class LightResponseDTO(BaseModel):
     id: str
     id_v1: Optional[str] = None
     owner: ResourceIdentifierDTO
-    metadata: MetadataDTO
+    metadata: Optional[MetadataDTO] = None
     product_data: Optional[ProductDataDTO] = None
     identify: Optional[Dict[str, Any]] = None
     service_id: Optional[int] = None
@@ -298,8 +297,7 @@ class LightResponseDTO(BaseModel):
     content_configuration: Optional[ContentConfigurationDTO] = None
     type: str = Field(default="light")
 
-    class Config:
-        extra = "allow"
+    model_config = ConfigDict(extra="allow")
 
 
 class LightListResponseDTO(BaseModel):

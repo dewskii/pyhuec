@@ -5,7 +5,7 @@ Based on: https://developers.meethue.com/develop/hue-api-v2/api-reference/
 
 from typing import Any, Dict, List, Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class ResourceIdentifierDTO(BaseModel):
@@ -86,8 +86,7 @@ class ActionDTO(BaseModel):
     effects: Optional[EffectsDTO] = None
     dynamics: Optional[DynamicsDTO] = None
 
-    class Config:
-        extra = "forbid"
+    model_config = ConfigDict(extra="forbid")
 
 
 class PaletteColorDTO(BaseModel):
@@ -112,7 +111,7 @@ class PaletteDTO(BaseModel):
     dimming: Optional[List[DimmingDTO]] = None
 
 
-# ===== Request DTOs =====
+
 
 
 class SceneCreateDTO(BaseModel):
@@ -134,8 +133,7 @@ class SceneCreateDTO(BaseModel):
     )
     type: str = Field(default="scene")
 
-    class Config:
-        extra = "forbid"
+    model_config = ConfigDict(extra="forbid")
 
 
 class SceneUpdateDTO(BaseModel):
@@ -147,8 +145,7 @@ class SceneUpdateDTO(BaseModel):
     speed: Optional[float] = Field(None, ge=0.0, le=1.0)
     auto_dynamic: Optional[bool] = None
 
-    class Config:
-        extra = "forbid"
+    model_config = ConfigDict(extra="forbid")
 
 
 class SceneRecallDTO(BaseModel):
@@ -160,11 +157,10 @@ class SceneRecallDTO(BaseModel):
     )
     dimming: Optional[DimmingDTO] = Field(None, description="Override scene brightness")
 
-    class Config:
-        extra = "forbid"
+    model_config = ConfigDict(extra="forbid")
 
 
-# ===== Response DTOs =====
+
 
 
 class SceneStatusDTO(BaseModel):
@@ -187,8 +183,7 @@ class SceneResponseDTO(BaseModel):
     status: Optional[SceneStatusDTO] = None
     type: str = Field(default="scene")
 
-    class Config:
-        extra = "allow"
+    model_config = ConfigDict(extra="allow")
 
 
 class SceneListResponseDTO(BaseModel):

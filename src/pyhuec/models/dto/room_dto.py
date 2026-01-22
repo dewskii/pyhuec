@@ -5,7 +5,7 @@ Based on: https://developers.meethue.com/develop/hue-api-v2/api-reference/
 
 from typing import Any, Dict, List, Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class ResourceIdentifierDTO(BaseModel):
@@ -26,7 +26,7 @@ class MetadataDTO(BaseModel):
     )
 
 
-# ===== Request DTOs =====
+
 
 
 class RoomCreateDTO(BaseModel):
@@ -38,8 +38,7 @@ class RoomCreateDTO(BaseModel):
     )
     type: str = Field(default="room", pattern="^(room|zone)$")
 
-    class Config:
-        extra = "forbid"
+    model_config = ConfigDict(extra="forbid")
 
 
 class RoomUpdateDTO(BaseModel):
@@ -50,11 +49,10 @@ class RoomUpdateDTO(BaseModel):
         None, description="Update the list of lights and devices in the room"
     )
 
-    class Config:
-        extra = "forbid"
+    model_config = ConfigDict(extra="forbid")
 
 
-# ===== Response DTOs =====
+
 
 
 class RoomResponseDTO(BaseModel):
@@ -72,8 +70,7 @@ class RoomResponseDTO(BaseModel):
     )
     type: str = Field(pattern="^(room|zone)$")
 
-    class Config:
-        extra = "allow"
+    model_config = ConfigDict(extra="allow")
 
 
 class RoomListResponseDTO(BaseModel):

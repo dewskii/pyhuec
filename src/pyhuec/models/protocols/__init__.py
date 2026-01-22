@@ -3,8 +3,8 @@ Protocols definitions for pyhuec models layer.
 These protocols define interface contracts for repositories, services, and controllers.
 """
 
-# Light protocols
-# Bridge protocols
+
+
 from .bridge_protocols import (
     BridgeControllerProtocol,
     BridgeEventStreamProtocol,
@@ -12,14 +12,14 @@ from .bridge_protocols import (
     BridgeServiceProtocol,
 )
 
-# Device protocols
+
 from .device_protocols import (
     DeviceControllerProtocol,
     DeviceRepositoryProtocol,
     DeviceServiceProtocol,
 )
 
-# Event protocols
+
 from .event_protocols import (
     EventBusProtocol,
     EventConsumerProtocol,
@@ -29,7 +29,7 @@ from .event_protocols import (
     EventTransformerProtocol,
 )
 
-# Grouped Light protocols
+
 from .grouped_light_protocols import (
     GroupedLightControllerProtocol,
     GroupedLightRepositoryProtocol,
@@ -41,21 +41,21 @@ from .light_protocols import (
     LightServiceProtocol,
 )
 
-# Room protocols
+
 from .room_protocols import (
     RoomControllerProtocol,
     RoomRepositoryProtocol,
     RoomServiceProtocol,
 )
 
-# Scene protocols
+
 from .scene_protocols import (
     SceneControllerProtocol,
     SceneRepositoryProtocol,
     SceneServiceProtocol,
 )
 
-# Transport protocols
+
 from .transport_protocols import (
     ApiClientProtocol,
     CacheProtocol,
@@ -66,39 +66,39 @@ from .transport_protocols import (
 )
 
 __all__ = [
-    # Light
+    
     "LightControllerProtocol",
     "LightRepositoryProtocol",
     "LightServiceProtocol",
-    # Room
+    
     "RoomControllerProtocol",
     "RoomRepositoryProtocol",
     "RoomServiceProtocol",
-    # Scene
+    
     "SceneControllerProtocol",
     "SceneRepositoryProtocol",
     "SceneServiceProtocol",
-    # Device
+    
     "DeviceControllerProtocol",
     "DeviceRepositoryProtocol",
     "DeviceServiceProtocol",
-    # Grouped Light
+    
     "GroupedLightControllerProtocol",
     "GroupedLightRepositoryProtocol",
     "GroupedLightServiceProtocol",
-    # Bridge
+    
     "BridgeControllerProtocol",
     "BridgeEventStreamProtocol",
     "BridgeRepositoryProtocol",
     "BridgeServiceProtocol",
-    # Transport
+    
     "ApiClientProtocol",
     "CacheProtocol",
     "EventClientProtocol",
     "HttpClientProtocol",
     "MdnsClientProtocol",
     "RateLimiterProtocol",
-    # Events
+    
     "EventBusProtocol",
     "EventConsumerProtocol",
     "EventHandlerProtocol",

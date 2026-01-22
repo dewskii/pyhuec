@@ -5,7 +5,7 @@ Based on: https://developers.meethue.com/develop/hue-api-v2/api-reference/
 
 from typing import Any, Dict, List, Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class ResourceIdentifierDTO(BaseModel):
@@ -72,7 +72,7 @@ class DynamicsDTO(BaseModel):
     speed: Optional[float] = Field(None, ge=0.0, le=1.0)
 
 
-# ===== Request DTOs =====
+
 
 
 class GroupedLightUpdateDTO(BaseModel):
@@ -86,8 +86,7 @@ class GroupedLightUpdateDTO(BaseModel):
     signaling: Optional[SignalingDTO] = None
     dynamics: Optional[DynamicsDTO] = None
 
-    class Config:
-        extra = "forbid"
+    model_config = ConfigDict(extra="forbid")
 
 
 class GroupedLightIdentifyDTO(BaseModel):
@@ -99,7 +98,7 @@ class GroupedLightIdentifyDTO(BaseModel):
     )
 
 
-# ===== Response DTOs =====
+
 
 
 class GroupedLightResponseDTO(BaseModel):
@@ -128,8 +127,7 @@ class GroupedLightResponseDTO(BaseModel):
     dynamics: Optional[DynamicsDTO] = None
     type: str = Field(default="grouped_light")
 
-    class Config:
-        extra = "allow"
+    model_config = ConfigDict(extra="allow")
 
 
 class GroupedLightListResponseDTO(BaseModel):
