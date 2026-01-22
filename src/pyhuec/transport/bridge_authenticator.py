@@ -62,17 +62,32 @@ class BridgeAuthenticator:
         Raises:
             RuntimeError: If API key cannot be obtained
         """
+
         if env_file:
             load_dotenv(env_file)
         else:
             load_dotenv()
 
+        api_key = os.getenv("HUE_USER")
+
         if api_key:
             logger.info("Found existing API key in environment")
             if await self._validate_api_key(api_key):
+                logger.info("API key is valid")
                 return api_key
             else:
-                api_key = await self._request_api_key_interactive()
+                logger.warning("API key in environment is invalid")
+        else:
+            logger.info("No API key found in environment")
+
+        if not interactive:
+            raise RuntimeError(
+                "No valid API key found and interactive mode is disabled. "
+                "Please set HUE_USER environment variable with a valid API key."
+            )
+
+        logger.info("Attempting to create new API key...")
+        api_key = await self._request_api_key_interactive()
 
         if env_file is None:
             env_file = Path.cwd() / ".env"
