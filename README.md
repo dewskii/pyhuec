@@ -66,7 +66,7 @@ This project using uv for handling dependencies and build scripts. See [Instruct
 
 #### Run Sample
 ```
-❯ uv run main.py
+❯ uv run example.py
 ```
 
 ## Connecting to your bridge
