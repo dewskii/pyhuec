@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 from zeroconf import IPVersion, ServiceStateChange
 from zeroconf.asyncio import AsyncServiceBrowser, AsyncServiceInfo, AsyncZeroconf
 
-from pyhuec import MdnsClientProtocol
+from pyhuec.models.protocols.transport_protocols import MdnsClientProtocol
 
 logger = logging.getLogger(__name__)
 load_dotenv()
