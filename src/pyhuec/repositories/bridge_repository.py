@@ -9,57 +9,52 @@ from pyhuec.models import (
 
 
 class BridgeRepository(BridgeRepositoryProtocol):
-    """Repository for Bridge data access operations using HTTP transport."""
+    """Bridge data access operations."""
 
     def __init__(self, http_client: HttpClientProtocol):
-        """
-        Initialize repository with HTTP client.
+        """Initialize repository.
 
         Args:
-            http_client: HTTP client for making API requests
+            http_client: HTTP client for API requests
         """
         self.http_client = http_client
 
     async def get_bridge_info(self) -> BridgeResponseDTO:
-        """
-        Retrieve bridge information.
+        """Get bridge information.
 
         Returns:
-            BridgeResponseDTO with bridge details
+            Bridge information
         """
         response = await self.http_client.get("/resource/bridge")
         return BridgeResponseDTO(**response)
 
     async def get_bridge_config(self) -> BridgeConfigDTO:
-        """
-        Retrieve bridge configuration.
+        """Get bridge configuration.
 
         Returns:
-            BridgeConfigDTO with configuration details
+            Bridge configuration
         """
         response = await self.http_client.get("/config")
         return BridgeConfigDTO(**response)
 
     async def get_all_resources(self) -> ResourceCollectionDTO:
-        """
-        Retrieve all resources from the bridge.
+        """Get all resources.
 
         Returns:
-            ResourceCollectionDTO with all resources
+            All resources
         """
         response = await self.http_client.get("/resource")
         return ResourceCollectionDTO(**response)
 
     async def get_resource(self, resource_type: str, resource_id: str) -> ResourceDTO:
-        """
-        Retrieve a specific resource by type and ID.
+        """Get specific resource.
 
         Args:
-            resource_type: Type of resource (light, room, scene, etc.)
-            resource_id: UUID of the resource
+            resource_type: Resource type
+            resource_id: Resource UUID
 
         Returns:
-            ResourceDTO with resource details
+            Resource details
         """
         response = await self.http_client.get(f"/resource/{resource_type}/{resource_id}")
         return ResourceDTO(**response)

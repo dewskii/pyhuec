@@ -15,9 +15,6 @@ logger = logging.getLogger(__name__)
 class EventController:
     """
     Controller for event stream operations.
-
-    This controller provides a high-level interface for managing the event
-    system, following the same controller pattern as other pyhuec controllers.
     """
 
     def __init__(self, event_service: EventServiceProtocol):

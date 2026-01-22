@@ -36,34 +36,7 @@ logger = logging.getLogger(__name__)
 
 class HueClient:
     """
-    Unified client for Hue Bridge interaction.
-
-    Provides:
-    - REST API operations (lights, rooms, scenes, etc.)
-    - Real-time event streaming
-    - Automatic state synchronization
-    - Local state caching
-
-    Usage:
-
-        client = HueClient(
-            light_repository=light_repo,
-            event_service=event_service,
-
-        )
-
-
-        await client.start_event_stream()
-
-
-        await client.subscribe_to_light_events(my_handler)
-
-
-        lights = await client.get_lights()
-        await client.turn_on_light(light_id, brightness=75.0)
-
-
-        cached_light = client.get_cached_light(light_id)
+    Client Hue Bridge interaction.
     """
 
     def __init__(
@@ -104,8 +77,6 @@ class HueClient:
         """
         Start listening to the Hue Bridge event stream.
 
-        This enables real-time state updates and keeps the local cache
-        synchronized automatically. Recommended for best experience.
         """
         logger.info("Starting Hue client event stream")
         await self._event_service.start_event_stream()

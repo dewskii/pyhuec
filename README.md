@@ -1,8 +1,59 @@
 # pyhuec
-**Python HueV2 Client**
+**Python Hue Client**
+
+Python client for interfacing with Philips Hue API v2, supports REST and Event streaming
 
 > [!NOTE]
 > This is very much a work in progress. API features have not been fully implemented. If you stumble upon this looking for a working hue client, it's not that yet. Feel free to contribute!
+
+## What's it do?
+
+- **Auto-Discovery** - Automatically finds your Hue Bridge on the network  
+- **Auto-Authentication** - Generates and saves API keys with guided setup  
+- **Event Streaming** - Real-time updates via Server-Sent Events (SSE)  
+- **State Caching** - Cache synchronized with REST API and events  
+- **Asynchronous** - It's async
+
+## Quick Start
+
+```python
+import asyncio
+from pyhuec.hue_client_factory import HueClientFactory
+
+async def main():
+    # use HueClientFactory.create_client(auto_authenticate=False)
+    # to disable auto fetching api key
+    client = await HueClientFactory.create_client()
+    
+    await client.start_event_stream()
+    # Enable in memory caching, optional
+    await client.initialize_cache()
+    
+
+    lights = await client.get_lights()
+    await client.turn_on_light(lights[0].id, brightness=100)
+    
+    # Get events from bridge and update state
+    await client.subscribe_to_light_events(
+        lambda event: print(f"Light changed: {event}")
+    )
+    
+    await client.stop_event_stream()
+
+asyncio.run(main())
+```
+
+On first run, you'll be prompted to press the button on your bridge. The API key is saved automatically for future use.
+
+## Installation
+
+```bash
+# Using uv (recommended)
+uv add pyhuec
+
+# Using pip
+pip install pyhuec
+```
 
 ## Developing
 This project using uv for handling dependencies and build scripts. See [Instructions on Installing](https://docs.astral.sh/uv/getting-started/installation/)
@@ -22,40 +73,48 @@ This project using uv for handling dependencies and build scripts. See [Instruct
 ```
 
 ## Connecting to your bridge
-> [!Note]
-> The client exclusively using mDNS for bridge discovery. It does not use the hue discovery service, and probably never will. More information on interfacing with the [Developer Hue Getting Started](https://developers.meethue.com/develop/get-started-2/) and the [HUE V2 API Reference](https://developers.meethue.com/develop/hue-api-v2/api-reference/#)
 
-The [main.py](main.py) in the root directory is acting as a scratch pad for quick testing. It currently finds a bridge, authenticates and fetches an API key, and finds any lights associated with the bridge. 
+>[!Note]
+> This client *only* uses mDNS for automatic bridge discovery. If you are having trouble finding your bridge with mDNS, feel free to follow [Hue's guide](https://developers.meethue.com/develop/get-started-2/#follow-3-easy-steps) on finding your bridge ip.
 
-On first run the client will attempt to fetch an API key for authentication.
+### Automatic Setup (Recommended)
 
-The client will write the key to a .env file at the root of the project under the name `HUE_USER`, and will leverage this key for future use.
+The easiest way is to let pyhuec handle everything:
 
-> [!IMPORTANT]
-> On first run when first fetching a key, you will be required to press the top button on you Hue Bridge. The program will halt waiting for input to proceed. If you are having trouble discoverying over mDNS, you can increase the timeout in ServiceFinder, or follow the instructions in the Hue documentation.
-
+```python
+client = await HueClientFactory.create_client(auto_authenticate=True)
 ```
-❯ uv run main.py
-INFO:...:Bridges to warm 1
-INFO:...:Warming controller
-INFO:...:Requesting new key
-Please press the connect button on hue bridge, press anykey to continue
-INFO:...:Authenticated with bridge; got key
-INFO:...:Obtained new key and wrote to dotenv
-INFO:...:Warming lights
-INFO:...:Found 5
-INFO:__main__:Lights found
-("dict_keys(['051ba29d-b073-44b1-ab23-a794a766feb2', "
- "'7aea3cdb-4833-4343-bbf0-9fad39564d53', "
- "'a84a1c2c-1968-4c81-bc9c-24e98a0d1b2b', "
- "'c3256160-81f7-48bc-8bd5-47ed5aa5fcbc', "
- "'cb4138af-af04-485b-8ce3-68070790d3a2'])")
 
+This will:
+1. Discover your bridge via mDNS
+2. Check for existing API key in `.env` file
+3. Prompt you to press the bridge button if needed
+4. Generate and save a new API key
+5. Connect to your bridge automatically
+
+## Manual Setup
+
+If you prefer manual configuration:
+
+```python
+client = await HueClientFactory.create_client(
+    bridge_ip="<bridge-ip-address>",
+    api_key="<your-api-key-here>"
+)
 ```
+
+### Environment Variables
+
+Set these in your `.env` file:
+
+```bash
+HUE_USER=your-api-key-here
+TARGET_MDNS=_hue._tcp.local.  # Optional, has default
+```
+
+The `HUE_USER` variable is automatically created when you use auto-authentication.
 
 ## Contributing
-> [!NOTE]
-> Ignore the makefile for now, haven't landed on what I want in it yet.
 Feel free to fork or open a PR. Will not be looking at issues until feature complete. 
 
 This project uses pre-commit for managing git-hooks, and is included as part of the dev dependences.

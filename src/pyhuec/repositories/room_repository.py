@@ -12,44 +12,45 @@ from pyhuec.transport.http_client import HttpClient
 
 
 class RoomRepository(RoomRepositoryProtocol):
-    """Repository for Room data access operations."""
+    """Room data access."""
 
     def __init__(self, http_client: HttpClient):
-        """Initialize the repository with an HTTP client."""
+        """Initialize repository.
+
+        Args:
+            http_client: HTTP client
+        """
         self._client = http_client
 
     async def get_room(self, room_id: str) -> RoomResponseDTO:
-        """
-        Retrieve a single room by ID.
+        """Get room by ID.
 
         Args:
-            room_id: UUID of the room
+            room_id: Room UUID
 
         Returns:
-            RoomResponseDTO with room details
+            Room details
         """
         response = await self._client.get(f"/clip/v2/resource/room/{room_id}")
         return RoomResponseDTO(**response)
 
     async def get_rooms(self) -> RoomListResponseDTO:
-        """
-        Retrieve all rooms.
+        """Get all rooms.
 
         Returns:
-            RoomListResponseDTO with list of all rooms
+            All rooms
         """
         response = await self._client.get("/clip/v2/resource/room")
         return RoomListResponseDTO(**response)
 
     async def create_room(self, create: RoomCreateDTO) -> RoomCreateResponseDTO:
-        """
-        Create a new room.
+        """Create room.
 
         Args:
-            create: RoomCreateDTO with room configuration
+            create: Room configuration
 
         Returns:
-            RoomCreateResponseDTO with created room ID
+            Created room ID
         """
         response = await self._client.post(
             "/clip/v2/resource/room",
@@ -60,15 +61,14 @@ class RoomRepository(RoomRepositoryProtocol):
     async def update_room(
         self, room_id: str, update: RoomUpdateDTO
     ) -> RoomUpdateResponseDTO:
-        """
-        Update a room's configuration.
+        """Update room.
 
         Args:
-            room_id: UUID of the room
-            update: RoomUpdateDTO with desired changes
+            room_id: Room UUID
+            update: Room update
 
         Returns:
-            RoomUpdateResponseDTO with confirmation
+            Update confirmation
         """
         response = await self._client.put(
             f"/clip/v2/resource/room/{room_id}",
@@ -77,14 +77,13 @@ class RoomRepository(RoomRepositoryProtocol):
         return RoomUpdateResponseDTO(**response)
 
     async def delete_room(self, room_id: str) -> RoomDeleteResponseDTO:
-        """
-        Delete a room.
+        """Delete room.
 
         Args:
-            room_id: UUID of the room
+            room_id: Room UUID
 
         Returns:
-            RoomDeleteResponseDTO with confirmation
+            Delete confirmation
         """
         response = await self._client.delete(f"/clip/v2/resource/room/{room_id}")
         return RoomDeleteResponseDTO(**response)

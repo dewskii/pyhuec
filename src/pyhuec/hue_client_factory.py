@@ -5,6 +5,7 @@ Handles dependency injection and wiring of all components.
 Supports automatic bridge discovery and authentication.
 """
 
+from email.mime import base
 import logging
 from pathlib import Path
 from typing import Optional
@@ -44,7 +45,7 @@ class HueClientFactory:
         auto_sync: bool = True,
         event_timeout: Optional[float] = None,
         http_timeout: float = 10.0,
-        auto_authenticate: bool = False,
+        auto_authenticate: bool = True,
         mdns_timeout: float = 5.0,
         env_file: Optional[Path] = None,
     ) -> HueClient:
@@ -110,7 +111,7 @@ class HueClientFactory:
 
         base_url = f"https://{bridge_ip}"
 
-        http_client = HttpClient()
+        http_client = HttpClient(base_url=base_url)
         http_client.set_base_url(base_url)
         http_client.set_auth_token(api_key)
         http_client.set_timeout(http_timeout)

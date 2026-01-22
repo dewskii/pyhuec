@@ -48,7 +48,7 @@ class MdnsClient(MdnsClientProtocol):
             ServiceStateChange.Updated,
         ):
             return
-        asyncio.create_task(self._resolve_services(zeroconf, service_type, name))
+        asyncio.create_task(self._resolve_hostname(zeroconf, service_type, name))
 
     async def discover_services(
         self,
@@ -103,7 +103,7 @@ class MdnsClient(MdnsClientProtocol):
         ips = await self.discover_services(timeout=timeout)
         return [{"ip": ip} for ip in ips]
 
-    async def resolve_hostname(self, zeroconf, service_type: str, name: str) -> None:
+    async def _resolve_hostname(self, zeroconf, service_type: str, name: str) -> None:
         """
         Resolve hostname to IP address using mDNS, adding to the service store.
 

@@ -1,6 +1,4 @@
-"""
-Grouped Light Repository for Hue API v2 operations.
-"""
+"""Grouped Light Repository."""
 
 from pyhuec.models.dto.grouped_light_dto import (
     GroupedLightIdentifyDTO,
@@ -14,26 +12,24 @@ from pyhuec.transport.http_client import HttpClient
 
 
 class GroupedLightRepository(GroupedLightRepositoryProtocol):
-    """Repository for Grouped Light data access operations."""
+    """Grouped light data access."""
 
     def __init__(self, http_client: HttpClient):
-        """
-        Initialize the repository.
+        """Initialize repository.
 
         Args:
-            http_client: HTTP client for API requests
+            http_client: HTTP client
         """
         self._client = http_client
 
     async def get_grouped_light(self, grouped_light_id: str) -> GroupedLightResponseDTO:
-        """
-        Retrieve a single grouped light by ID.
+        """Get grouped light by ID.
 
         Args:
-            grouped_light_id: UUID of the grouped light
+            grouped_light_id: Grouped light UUID
 
         Returns:
-            GroupedLightResponseDTO with grouped light details
+            Grouped light details
         """
         response = await self._client.get(
             f"/clip/v2/resource/grouped_light/{grouped_light_id}"
@@ -41,11 +37,10 @@ class GroupedLightRepository(GroupedLightRepositoryProtocol):
         return GroupedLightResponseDTO(**response)
 
     async def get_grouped_lights(self) -> GroupedLightListResponseDTO:
-        """
-        Retrieve all grouped lights.
+        """Get all grouped lights.
 
         Returns:
-            GroupedLightListResponseDTO with list of all grouped lights
+            All grouped lights
         """
         response = await self._client.get("/clip/v2/resource/grouped_light")
         return GroupedLightListResponseDTO(**response)
@@ -53,15 +48,14 @@ class GroupedLightRepository(GroupedLightRepositoryProtocol):
     async def update_grouped_light(
         self, grouped_light_id: str, update: GroupedLightUpdateDTO
     ) -> GroupedLightUpdateResponseDTO:
-        """
-        Update a grouped light's state (affects all lights in the group).
+        """Update grouped light state.
 
         Args:
-            grouped_light_id: UUID of the grouped light
-            update: GroupedLightUpdateDTO with desired changes
+            grouped_light_id: Grouped light UUID
+            update: Grouped light update
 
         Returns:
-            GroupedLightUpdateResponseDTO with confirmation
+            Update confirmation
         """
         response = await self._client.put(
             f"/clip/v2/resource/grouped_light/{grouped_light_id}",
@@ -72,15 +66,14 @@ class GroupedLightRepository(GroupedLightRepositoryProtocol):
     async def identify_grouped_light(
         self, grouped_light_id: str, identify: GroupedLightIdentifyDTO
     ) -> GroupedLightUpdateResponseDTO:
-        """
-        Flash all lights in a grouped light for identification.
+        """Flash grouped light for identification.
 
         Args:
-            grouped_light_id: UUID of the grouped light
-            identify: GroupedLightIdentifyDTO with identify action
+            grouped_light_id: Grouped light UUID
+            identify: Identify action
 
         Returns:
-            GroupedLightUpdateResponseDTO with confirmation
+            Update confirmation
         """
         response = await self._client.put(
             f"/clip/v2/resource/grouped_light/{grouped_light_id}",

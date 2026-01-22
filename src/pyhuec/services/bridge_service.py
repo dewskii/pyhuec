@@ -3,14 +3,13 @@ from pyhuec.models.protocols import BridgeRepositoryProtocol, BridgeServiceProto
 
 
 class BridgeService(BridgeServiceProtocol):
-    """Service for Bridge business logic operations."""
+    """Bridge business logic."""
 
     def __init__(self, bridge_repository: BridgeRepositoryProtocol):
-        """
-        Initialize service with bridge repository.
+        """Initialize service.
 
         Args:
-            bridge_repository: Repository for bridge data access
+            bridge_repository: Bridge repository
         """
         self.bridge_repository = bridge_repository
         self._connected = False
@@ -18,11 +17,10 @@ class BridgeService(BridgeServiceProtocol):
         self._app_key: str | None = None
 
     async def connect(self) -> bool:
-        """
-        Establish connection to the bridge.
+        """Connect to bridge.
 
         Returns:
-            True if connection successful
+            True if successful
         """
         try:
             
@@ -34,11 +32,10 @@ class BridgeService(BridgeServiceProtocol):
             return False
 
     async def disconnect(self) -> bool:
-        """
-        Disconnect from the bridge.
+        """Disconnect from bridge.
 
         Returns:
-            True if disconnection successful
+            True if successful
         """
         self._connected = False
         self._authenticated = False
@@ -46,14 +43,13 @@ class BridgeService(BridgeServiceProtocol):
         return True
 
     async def authenticate(self, app_key: str) -> bool:
-        """
-        Authenticate with the bridge using an app key.
+        """Authenticate with bridge.
 
         Args:
-            app_key: Application key for authentication
+            app_key: Application key
 
         Returns:
-            True if authentication successful
+            True if successful
         """
         try:
             
@@ -67,17 +63,16 @@ class BridgeService(BridgeServiceProtocol):
             return False
 
     async def register_application(self, app_name: str) -> str:
-        """
-        Register a new application with the bridge.
+        """Register application.
 
         Args:
-            app_name: Name of the application
+            app_name: Application name
 
         Returns:
-            Generated application key
+            Application key
 
         Raises:
-            NotImplementedError: Registration requires special bridge endpoint
+            NotImplementedError: Not implemented
         """
         raise NotImplementedError(
             "Application registration requires pressing the bridge button and "
@@ -85,39 +80,35 @@ class BridgeService(BridgeServiceProtocol):
         )
 
     async def get_bridge_info(self) -> BridgeResponseDTO:
-        """
-        Get detailed bridge information.
+        """Get bridge information.
 
         Returns:
-            BridgeResponseDTO with complete bridge details
+            Bridge information
         """
         return await self.bridge_repository.get_bridge_info()
 
     async def discover_resources(self) -> ResourceCollectionDTO:
-        """
-        Discover all available resources on the bridge.
+        """Discover all resources.
 
         Returns:
-            ResourceCollectionDTO with all discovered resources
+            All resources
         """
         return await self.bridge_repository.get_all_resources()
 
     async def get_resource(self, resource_type: str, resource_id: str) -> ResourceDTO:
-        """
-        Get a specific resource by type and ID.
+        """Get resource.
 
         Args:
-            resource_type: Type of resource (light, room, scene, etc.)
-            resource_id: UUID of the resource
+            resource_type: Resource type
+            resource_id: Resource UUID
 
         Returns:
-            ResourceDTO with resource details
+            Resource details
         """
         return await self.bridge_repository.get_resource(resource_type, resource_id)
 
     async def is_connected(self) -> bool:
-        """
-        Check if connected to the bridge.
+        """Check connection status.
 
         Returns:
             True if connected
@@ -125,24 +116,19 @@ class BridgeService(BridgeServiceProtocol):
         return self._connected
 
     async def get_api_version(self) -> str:
-        """
-        Get the API version of the bridge.
+        """Get API version.
 
         Returns:
-            API version string
+            API version
         """
         bridge_info = await self.bridge_repository.get_bridge_info()
-        
-        
         return getattr(bridge_info, "api_version", "unknown")
 
     async def get_software_version(self) -> str:
-        """
-        Get the software version of the bridge.
+        """Get software version.
 
         Returns:
-            Software version string
+            Software version
         """
         bridge_info = await self.bridge_repository.get_bridge_info()
-        
         return getattr(bridge_info, "software_version", "unknown")

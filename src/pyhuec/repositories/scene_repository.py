@@ -13,44 +13,45 @@ from pyhuec.transport.http_client import HttpClient
 
 
 class SceneRepository(SceneRepositoryProtocol):
-    """Repository for Scene data access operations."""
+    """Scene data access."""
 
     def __init__(self, http_client: HttpClient):
-        """Initialize the repository with an HTTP client."""
+        """Initialize repository.
+
+        Args:
+            http_client: HTTP client
+        """
         self._client = http_client
 
     async def get_scene(self, scene_id: str) -> SceneResponseDTO:
-        """
-        Retrieve a single scene by ID.
+        """Get scene by ID.
 
         Args:
-            scene_id: UUID of the scene
+            scene_id: Scene UUID
 
         Returns:
-            SceneResponseDTO with scene details
+            Scene details
         """
         response = await self._client.get(f"/clip/v2/resource/scene/{scene_id}")
         return SceneResponseDTO(**response)
 
     async def get_scenes(self) -> SceneListResponseDTO:
-        """
-        Retrieve all scenes.
+        """Get all scenes.
 
         Returns:
-            SceneListResponseDTO with list of all scenes
+            All scenes
         """
         response = await self._client.get("/clip/v2/resource/scene")
         return SceneListResponseDTO(**response)
 
     async def create_scene(self, create: SceneCreateDTO) -> SceneCreateResponseDTO:
-        """
-        Create a new scene.
+        """Create scene.
 
         Args:
-            create: SceneCreateDTO with scene configuration
+            create: Scene configuration
 
         Returns:
-            SceneCreateResponseDTO with created scene ID
+            Created scene ID
         """
         response = await self._client.post(
             "/clip/v2/resource/scene",
@@ -61,15 +62,14 @@ class SceneRepository(SceneRepositoryProtocol):
     async def update_scene(
         self, scene_id: str, update: SceneUpdateDTO
     ) -> SceneUpdateResponseDTO:
-        """
-        Update a scene's configuration.
+        """Update scene.
 
         Args:
-            scene_id: UUID of the scene
-            update: SceneUpdateDTO with desired changes
+            scene_id: Scene UUID
+            update: Scene update
 
         Returns:
-            SceneUpdateResponseDTO with confirmation
+            Update confirmation
         """
         response = await self._client.put(
             f"/clip/v2/resource/scene/{scene_id}",
@@ -80,15 +80,14 @@ class SceneRepository(SceneRepositoryProtocol):
     async def recall_scene(
         self, scene_id: str, recall: SceneRecallDTO
     ) -> SceneUpdateResponseDTO:
-        """
-        Activate/recall a scene.
+        """Activate scene.
 
         Args:
-            scene_id: UUID of the scene
-            recall: SceneRecallDTO with recall parameters
+            scene_id: Scene UUID
+            recall: Recall parameters
 
         Returns:
-            SceneUpdateResponseDTO with confirmation
+            Update confirmation
         """
         response = await self._client.put(
             f"/clip/v2/resource/scene/{scene_id}",

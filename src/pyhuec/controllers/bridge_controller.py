@@ -3,46 +3,42 @@ from pyhuec.models.protocols import BridgeControllerProtocol, BridgeServiceProto
 
 
 class BridgeController(BridgeControllerProtocol):
-    """Controller for Bridge operations, coordinating HTTP requests to service layer."""
+    """Bridge request handler."""
 
     def __init__(self, bridge_service: BridgeServiceProtocol):
-        """
-        Initialize controller with bridge service.
+        """Initialize controller.
 
         Args:
-            bridge_service: Service for bridge business logic
+            bridge_service: Bridge service
         """
         self.bridge_service = bridge_service
 
     async def handle_get_bridge_info(self) -> BridgeResponseDTO:
-        """
-        Handle GET /resource/bridge request.
+        """Handle GET /resource/bridge.
 
         Returns:
-            BridgeResponseDTO with bridge information
+            Bridge information
         """
         return await self.bridge_service.get_bridge_info()
 
     async def handle_get_resources(self) -> ResourceCollectionDTO:
-        """
-        Handle GET /resource request.
+        """Handle GET /resource.
 
         Returns:
-            ResourceCollectionDTO with all resources
+            All resources
         """
         return await self.bridge_service.discover_resources()
 
     async def handle_get_resource(
         self, resource_type: str, resource_id: str
     ) -> ResourceDTO:
-        """
-        Handle GET /resource/{type}/{id} request.
+        """Handle GET /resource/{type}/{id}.
 
         Args:
-            resource_type: Type of resource (light, room, scene, etc.)
-            resource_id: UUID of the resource
+            resource_type: Resource type
+            resource_id: Resource UUID
 
         Returns:
-            ResourceDTO with resource details
+            Resource details
         """
         return await self.bridge_service.get_resource(resource_type, resource_id)
