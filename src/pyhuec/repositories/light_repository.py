@@ -30,7 +30,7 @@ class LightRepository(LightRepositoryProtocol):
             Light details
         """
         response = await self._client.get(f"/clip/v2/resource/light/{light_id}")
-        return LightResponseDTO(**response)
+        return LightResponseDTO(**response["data"][0])
 
     async def get_lights(self) -> LightListResponseDTO:
         """Get all lights.
@@ -55,24 +55,22 @@ class LightRepository(LightRepositoryProtocol):
         """
         response = await self._client.put(
             f"/clip/v2/resource/light/{light_id}",
-            data=update.model_dump(exclude_none=True)
+            body=update.model_dump(exclude_none=True)
         )
         return LightUpdateResponseDTO(**response)
 
-    async def identify_light(
-        self, light_id: str, identify: LightIdentifyDTO
-    ) -> LightUpdateResponseDTO:
+    async def identify_light(self, light_id: str) -> LightUpdateResponseDTO:
         """Flash light for identification.
 
         Args:
             light_id: Light UUID
-            identify: Identify action
 
         Returns:
             Update confirmation
         """
+        identify = LightIdentifyDTO(action="identify")
         response = await self._client.put(
             f"/clip/v2/resource/light/{light_id}",
-            data=identify.model_dump(exclude_none=True)
+            body=identify.model_dump(exclude_none=True)
         )
         return LightUpdateResponseDTO(**response)

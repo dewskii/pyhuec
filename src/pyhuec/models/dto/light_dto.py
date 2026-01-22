@@ -138,14 +138,14 @@ class EffectsDTO(BaseModel):
 class EffectActionDTO(BaseModel):
     """Effect action configuration."""
 
-    effect: str
+    effect: Optional[str] = None
     effect_values: Optional[List[str]] = None
 
 
 class EffectStatusDTO(BaseModel):
     """Effect status information."""
 
-    effect: str
+    effect: Optional[str] = None
     effect_values: Optional[List[str]] = None
 
 

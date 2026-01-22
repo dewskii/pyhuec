@@ -32,7 +32,7 @@ class RoomRepository(RoomRepositoryProtocol):
             Room details
         """
         response = await self._client.get(f"/clip/v2/resource/room/{room_id}")
-        return RoomResponseDTO(**response)
+        return RoomResponseDTO(**response["data"][0])
 
     async def get_rooms(self) -> RoomListResponseDTO:
         """Get all rooms.

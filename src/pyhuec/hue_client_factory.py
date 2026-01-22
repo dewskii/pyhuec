@@ -7,8 +7,11 @@ Supports automatic bridge discovery and authentication.
 
 from email.mime import base
 import logging
+import os
 from pathlib import Path
 from typing import Optional
+
+from dotenv import load_dotenv
 
 from pyhuec.hue_client import HueClient
 from pyhuec.repositories.grouped_light_repository import GroupedLightRepository
@@ -26,6 +29,7 @@ from pyhuec.transport.mdns_client import MdnsClient
 
 logger = logging.getLogger(__name__)
 
+load_dotenv()
 
 class HueClientFactory:
     """
@@ -83,38 +87,49 @@ class HueClientFactory:
                 )
 
             bridge_ip = bridges[0]["ip"]
-            logger.info(f"✅ Discovered bridge at {bridge_ip}")
-            print(f"🔍 Discovered Hue Bridge at {bridge_ip}")
+            logger.info(f"Discovered bridge at {bridge_ip}")
 
         if api_key is None:
-            logger.info("No API key provided, attempting to obtain one...")
+            if env_file:
+                load_dotenv(env_file)
+            else:
+                load_dotenv()
+            
+            api_key = os.getenv("HUE_USER")
+            
+            if api_key:
+                logger.info("Loaded API key from environment")
+            elif auto_authenticate:
+                logger.info("No API key found, attempting to obtain one...")
 
-            authenticator = BridgeAuthenticator(
-                bridge_ip=bridge_ip,
-                app_name="pyhuec",
-                device_name="python-client",
+                authenticator = BridgeAuthenticator(
+                    bridge_ip=bridge_ip,
+                    app_name="pyhuec",
+                    device_name="python-client",
+                )
+
+                try:
+                    api_key = await authenticator.get_or_create_api_key(
+                        env_file=env_file,
+                        interactive=True,
+                    )
+                finally:
+                    await authenticator.close()
+
+        if not api_key:
+            raise RuntimeError(
+                "Failed to obtain API key. "
+                "Please provide api_key parameter or set HUE_USER environment variable."
             )
-
-            try:
-                api_key = await authenticator.get_or_create_api_key(
-                    env_file=env_file,
-                    interactive=auto_authenticate,
-                )
-            finally:
-                await authenticator.close()
-
-            if not api_key:
-                raise RuntimeError(
-                    "Failed to obtain API key. "
-                    "Please provide api_key parameter or set HUE_USER environment variable."
-                )
 
         base_url = f"https://{bridge_ip}"
 
-        http_client = HttpClient(base_url=base_url)
-        http_client.set_base_url(base_url)
+        http_client = HttpClient(
+            base_url=base_url,
+            timeout=http_timeout,
+            verify=False
+        )
         http_client.set_auth_token(api_key)
-        http_client.set_timeout(http_timeout)
 
         light_repo = LightRepository(http_client=http_client)
         grouped_light_repo = GroupedLightRepository(http_client=http_client)
@@ -168,9 +183,6 @@ class HueClientFactory:
         """
         Create client by discovering bridge via mDNS.
 
-        This is a convenience method that calls create_client() with
-        bridge_ip=None to trigger auto-discovery.
-
         Args:
             api_key: API key for authentication (loads from env or generates if None)
             mdns_timeout: Timeout for mDNS discovery
@@ -180,9 +192,6 @@ class HueClientFactory:
 
         Returns:
             Configured HueClient instance
-
-        Raises:
-            RuntimeError: If no bridge found or authentication fails
         """
         return await HueClientFactory.create_client(
             bridge_ip=None,

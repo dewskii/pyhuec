@@ -33,7 +33,7 @@ class SceneRepository(SceneRepositoryProtocol):
             Scene details
         """
         response = await self._client.get(f"/clip/v2/resource/scene/{scene_id}")
-        return SceneResponseDTO(**response)
+        return SceneResponseDTO(**response["data"][0])
 
     async def get_scenes(self) -> SceneListResponseDTO:
         """Get all scenes.
