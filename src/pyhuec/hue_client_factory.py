@@ -91,37 +91,33 @@ class HueClientFactory:
             logger.info(f"Discovered bridge at {bridge_ip}")
 
         if api_key is None:
-            if env_file:
-                load_dotenv(env_file)
-            else:
-                load_dotenv()
-
-            api_key = os.getenv("HUE_USER")
-
-            if api_key:
-                logger.info("Loaded API key from environment")
-            elif auto_authenticate:
-                logger.info("No API key found, attempting to obtain one...")
-
-                authenticator = BridgeAuthenticator(
-                    bridge_ip=bridge_ip,
-                    app_name="pyhuec",
-                    device_name="python-client",
-                )
-
-                try:
-                    api_key = await authenticator.get_or_create_api_key(
-                        env_file=env_file,
-                        interactive=True,
-                    )
-                finally:
-                    await authenticator.close()
-
-        if not api_key:
-            raise RuntimeError(
-                "Failed to obtain API key. "
-                "Please provide api_key parameter or set HUE_USER environment variable."
+            # Delegate authentication to BridgeAuthenticator
+            # It will check environment, validate, and create new key if needed
+            authenticator = BridgeAuthenticator(
+                bridge_ip=bridge_ip,
+                app_name="pyhuec",
+                device_name="python-client",
             )
+
+            try:
+                api_key = await authenticator.get_or_create_api_key(
+                    env_file=env_file,
+                    interactive=auto_authenticate,
+                )
+            except RuntimeError as e:
+                await authenticator.close()
+                if auto_authenticate:
+                    raise RuntimeError(
+                        "Failed to obtain API key. "
+                        "Please ensure the bridge button was pressed and try again."
+                    ) from e
+                else:
+                    raise RuntimeError(
+                        "No valid API key found. "
+                        "Please provide api_key parameter or set HUE_USER environment variable."
+                    ) from e
+            finally:
+                await authenticator.close()
 
         base_url = f"https://{bridge_ip}"
 
