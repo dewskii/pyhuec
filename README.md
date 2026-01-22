@@ -46,14 +46,8 @@ asyncio.run(main())
 On first run, you'll be prompted to press the button on your bridge. The API key is saved automatically for future use.
 
 ## Installation
-
-```bash
-# Using uv (recommended)
-uv add pyhuec
-
-# Using pip
-pip install pyhuec
-```
+> [!NOTE]
+> Will add here when published to pypi
 
 ## Developing
 This project using uv for handling dependencies and build scripts. See [Instructions on Installing](https://docs.astral.sh/uv/getting-started/installation/)
