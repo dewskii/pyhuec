@@ -9,10 +9,15 @@ from pyhuec.models.dto.scene_dto import (
     SceneUpdateResponseDTO,
 )
 from pyhuec.models.protocols import SceneRepositoryProtocol
+from pyhuec.transport.http_client import HttpClient
 
 
 class SceneRepository(SceneRepositoryProtocol):
-    """Protocol for Scene data access operations."""
+    """Repository for Scene data access operations."""
+
+    def __init__(self, http_client: HttpClient):
+        """Initialize the repository with an HTTP client."""
+        self._client = http_client
 
     async def get_scene(self, scene_id: str) -> SceneResponseDTO:
         """
@@ -24,7 +29,8 @@ class SceneRepository(SceneRepositoryProtocol):
         Returns:
             SceneResponseDTO with scene details
         """
-        ...
+        response = await self._client.get(f"/clip/v2/resource/scene/{scene_id}")
+        return SceneResponseDTO(**response)
 
     async def get_scenes(self) -> SceneListResponseDTO:
         """
@@ -33,7 +39,8 @@ class SceneRepository(SceneRepositoryProtocol):
         Returns:
             SceneListResponseDTO with list of all scenes
         """
-        ...
+        response = await self._client.get("/clip/v2/resource/scene")
+        return SceneListResponseDTO(**response)
 
     async def create_scene(self, create: SceneCreateDTO) -> SceneCreateResponseDTO:
         """
@@ -45,7 +52,11 @@ class SceneRepository(SceneRepositoryProtocol):
         Returns:
             SceneCreateResponseDTO with created scene ID
         """
-        ...
+        response = await self._client.post(
+            "/clip/v2/resource/scene",
+            data=create.model_dump(exclude_none=True)
+        )
+        return SceneCreateResponseDTO(**response)
 
     async def update_scene(
         self, scene_id: str, update: SceneUpdateDTO
@@ -60,7 +71,11 @@ class SceneRepository(SceneRepositoryProtocol):
         Returns:
             SceneUpdateResponseDTO with confirmation
         """
-        ...
+        response = await self._client.put(
+            f"/clip/v2/resource/scene/{scene_id}",
+            data=update.model_dump(exclude_none=True)
+        )
+        return SceneUpdateResponseDTO(**response)
 
     async def recall_scene(
         self, scene_id: str, recall: SceneRecallDTO
@@ -75,7 +90,11 @@ class SceneRepository(SceneRepositoryProtocol):
         Returns:
             SceneUpdateResponseDTO with confirmation
         """
-        ...
+        response = await self._client.put(
+            f"/clip/v2/resource/scene/{scene_id}",
+            data=recall.model_dump(exclude_none=True)
+        )
+        return SceneUpdateResponseDTO(**response)
 
     async def delete_scene(self, scene_id: str) -> SceneDeleteResponseDTO:
         """
@@ -87,4 +106,5 @@ class SceneRepository(SceneRepositoryProtocol):
         Returns:
             SceneDeleteResponseDTO with confirmation
         """
-        ...
+        response = await self._client.delete(f"/clip/v2/resource/scene/{scene_id}")
+        return SceneDeleteResponseDTO(**response)

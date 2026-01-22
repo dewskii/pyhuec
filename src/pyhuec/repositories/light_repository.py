@@ -6,10 +6,15 @@ from pyhuec.models.dto.light_dto import (
     LightUpdateResponseDTO,
 )
 from pyhuec.models.protocols import LightRepositoryProtocol
+from pyhuec.transport.http_client import HttpClient
 
 
 class LightRepository(LightRepositoryProtocol):
-    """Protocol for Light data access operations."""
+    """Repository for Light data access operations."""
+
+    def __init__(self, http_client: HttpClient):
+        """Initialize the repository with an HTTP client."""
+        self._client = http_client
 
     async def get_light(self, light_id: str) -> LightResponseDTO:
         """
@@ -21,7 +26,8 @@ class LightRepository(LightRepositoryProtocol):
         Returns:
             LightResponseDTO with light details
         """
-        ...
+        response = await self._client.get(f"/clip/v2/resource/light/{light_id}")
+        return LightResponseDTO(**response)
 
     async def get_lights(self) -> LightListResponseDTO:
         """
@@ -30,7 +36,8 @@ class LightRepository(LightRepositoryProtocol):
         Returns:
             LightListResponseDTO with list of all lights
         """
-        ...
+        response = await self._client.get("/clip/v2/resource/light")
+        return LightListResponseDTO(**response)
 
     async def update_light(
         self, light_id: str, update: LightUpdateDTO
@@ -45,7 +52,11 @@ class LightRepository(LightRepositoryProtocol):
         Returns:
             LightUpdateResponseDTO with confirmation
         """
-        ...
+        response = await self._client.put(
+            f"/clip/v2/resource/light/{light_id}",
+            data=update.model_dump(exclude_none=True)
+        )
+        return LightUpdateResponseDTO(**response)
 
     async def identify_light(
         self, light_id: str, identify: LightIdentifyDTO
@@ -60,4 +71,8 @@ class LightRepository(LightRepositoryProtocol):
         Returns:
             LightUpdateResponseDTO with confirmation
         """
-        ...
+        response = await self._client.put(
+            f"/clip/v2/resource/light/{light_id}",
+            data=identify.model_dump(exclude_none=True)
+        )
+        return LightUpdateResponseDTO(**response)
