@@ -2,13 +2,13 @@
 repos:
   - repo: local
     hooks:
-      # - id: pytest
-      #   name: Run tests
-      #   entry: uv run pytest
-      #   language: python
-      #   types: [python]
-      #   pass_filenames: false
-      #   always_run: true
+      - id: pytest
+        name: Run tests
+        entry: uv run pytest
+        language: python
+        types: [python]
+        pass_filenames: false
+        always_run: true
       - id: ruff sort
         name: Ruff linter
         entry: uv run ruff format .

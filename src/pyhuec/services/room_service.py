@@ -1,7 +1,7 @@
 from typing import List
 
-from pyhuec.models import RoomServiceProtocol
-from pyhuec.models.dto.room_dto import ResourceIdentifierDTO, RoomResponseDTO
+from pyhuec.models.dto import ResourceIdentifierDTO, RoomResponseDTO
+from pyhuec.models.protocols import RoomServiceProtocol
 
 
 class RoomService(RoomServiceProtocol):

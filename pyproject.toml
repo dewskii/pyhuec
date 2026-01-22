@@ -28,6 +28,7 @@ allow-direct-references = true
 members = [
     ".",
     ".",
+    ".",
 ]
 
 [tool.uv.sources]

@@ -1,53 +1,62 @@
 """
-Protocol definitions for pyhuec models layer.
+Protocols definitions for pyhuec models layer.
 These protocols define interface contracts for repositories, services, and controllers.
 """
 
 # Light protocols
 # Bridge protocols
-from .bridge_protocol import (
+from .bridge_protocols import (
     BridgeControllerProtocol,
-    BridgeDiscoveryProtocol,
     BridgeEventStreamProtocol,
     BridgeRepositoryProtocol,
     BridgeServiceProtocol,
 )
 
 # Device protocols
-from .device_protocol import (
+from .device_protocols import (
     DeviceControllerProtocol,
     DeviceRepositoryProtocol,
     DeviceServiceProtocol,
 )
 
+# Event protocols
+from .event_protocols import (
+    EventBusProtocol,
+    EventConsumerProtocol,
+    EventHandlerProtocol,
+    EventProducerProtocol,
+    EventServiceProtocol,
+    EventTransformerProtocol,
+)
+
 # Grouped Light protocols
-from .grouped_light_protocol import (
+from .grouped_light_protocols import (
     GroupedLightControllerProtocol,
     GroupedLightRepositoryProtocol,
     GroupedLightServiceProtocol,
 )
-from .light_protocol import (
+from .light_protocols import (
     LightControllerProtocol,
     LightRepositoryProtocol,
     LightServiceProtocol,
 )
 
 # Room protocols
-from .room_protocol import (
+from .room_protocols import (
     RoomControllerProtocol,
     RoomRepositoryProtocol,
     RoomServiceProtocol,
 )
 
 # Scene protocols
-from .scene_protocol import (
+from .scene_protocols import (
     SceneControllerProtocol,
     SceneRepositoryProtocol,
     SceneServiceProtocol,
 )
 
 # Transport protocols
-from .transport_protocol import (
+from .transport_protocols import (
     ApiClientProtocol,
     CacheProtocol,
     EventClientProtocol,
@@ -79,7 +88,6 @@ __all__ = [
     "GroupedLightServiceProtocol",
     # Bridge
     "BridgeControllerProtocol",
-    "BridgeDiscoveryProtocol",
     "BridgeEventStreamProtocol",
     "BridgeRepositoryProtocol",
     "BridgeServiceProtocol",
@@ -90,4 +98,11 @@ __all__ = [
     "HttpClientProtocol",
     "MdnsClientProtocol",
     "RateLimiterProtocol",
+    # Events
+    "EventBusProtocol",
+    "EventConsumerProtocol",
+    "EventHandlerProtocol",
+    "EventProducerProtocol",
+    "EventServiceProtocol",
+    "EventTransformerProtocol",
 ]

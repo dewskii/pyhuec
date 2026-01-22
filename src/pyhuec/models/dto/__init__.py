@@ -38,6 +38,17 @@ from .device_dto import (
     UserTestDTO,
 )
 
+# Event DTOs
+from .event_dto import (
+    EventDataDTO,
+    EventFilterDTO,
+    EventStreamMessageDTO,
+    EventSubscriptionDTO,
+    EventType,
+    InternalEventDTO,
+    ResourceType,
+)
+
 # Grouped Light DTOs
 from .grouped_light_dto import (
     GroupedLightIdentifyDTO,
@@ -158,6 +169,14 @@ __all__ = [
     "SingleResourceResponseDTO",
     "TemperatureSensorDTO",
     "ZigbeeConnectivityDTO",
+    # Events
+    "EventDataDTO",
+    "EventFilterDTO",
+    "EventStreamMessageDTO",
+    "EventSubscriptionDTO",
+    "EventType",
+    "InternalEventDTO",
+    "ResourceType",
     # Light
     "LightAlertDTO",
     "LightColorDTO",
