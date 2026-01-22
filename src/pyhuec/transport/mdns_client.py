@@ -77,12 +77,31 @@ class MdnsClient(MdnsClientProtocol):
                 await self.aiobrowser.async_cancel()
                 await self.aiozc.async_close()
 
-        # Return service IPv4 addresses
+        
         ips: List[str] = []
         for info in self.services.values():
             ips.extend(info.parsed_addresses(version=IPVersion.V4Only))
         return sorted(set(ips))
-        ...
+    
+    async def discover_bridges(
+        self,
+        timeout: float = 5.0,
+    ) -> List[Dict[str, str]]:
+        """
+        Discover Hue Bridges on the network.
+        
+        Convenience method that discovers bridges and returns them
+        in a structured format.
+        
+        Args:
+            timeout: Discovery timeout in seconds
+            
+        Returns:
+            List of discovered bridges with 'ip' key
+            Example: [{"ip": "192.168.1.100"}, {"ip": "192.168.1.101"}]
+        """
+        ips = await self.discover_services(timeout=timeout)
+        return [{"ip": ip} for ip in ips]
 
     async def resolve_hostname(self, zeroconf, service_type: str, name: str) -> None:
         """
