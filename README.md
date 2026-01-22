@@ -4,7 +4,7 @@
 Python client for interfacing with Philips Hue API v2, supports REST and Event streaming
 
 > [!NOTE]
-> This is very much a work in progress. API features have not been fully implemented. If you stumble upon this looking for a working hue client, it's not that yet. Feel free to contribute!
+> This is very much a work in progress. Expect bugs and the like
 
 ## What's it do?
 
