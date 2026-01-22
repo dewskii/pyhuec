@@ -45,9 +45,6 @@ class UserTestDTO(BaseModel):
     usertest: bool
 
 
-
-
-
 class DeviceUpdateDTO(BaseModel):
     """DTO for updating a device (PUT request)."""
 
@@ -65,9 +62,6 @@ class DeviceIdentifyDTO(BaseModel):
     action: str = Field(
         pattern="^(identify)$", description="Set to 'identify' to identify the device"
     )
-
-
-
 
 
 class DeviceResponseDTO(BaseModel):
@@ -108,9 +102,6 @@ class DeviceDeleteResponseDTO(BaseModel):
     data: List[ResourceIdentifierDTO]
 
 
-
-
-
 class ButtonEventDTO(BaseModel):
     """Button press event data."""
 
@@ -120,9 +111,6 @@ class ButtonEventDTO(BaseModel):
     metadata: Dict[str, str]
     button: Dict[str, Any]
     type: str = Field(default="button")
-
-
-
 
 
 class MotionSensorDTO(BaseModel):
@@ -158,9 +146,6 @@ class LightLevelSensorDTO(BaseModel):
     type: str = Field(default="light_level")
 
 
-
-
-
 class ZigbeeConnectivityDTO(BaseModel):
     """ZigBee connectivity status."""
 
@@ -174,9 +159,6 @@ class ZigbeeConnectivityDTO(BaseModel):
     type: str = Field(default="zigbee_connectivity")
 
 
-
-
-
 class DevicePowerDTO(BaseModel):
     """Device power status."""
 
@@ -187,13 +169,9 @@ class DevicePowerDTO(BaseModel):
     type: str = Field(default="device_power")
 
 
-
-
-
 class HomekitDTO(BaseModel):
     """HomeKit configuration."""
 
     id: str
     status: str = Field(pattern="^(paired|pairing|unpaired)$")
     type: str = Field(default="homekit")
-

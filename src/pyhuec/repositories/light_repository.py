@@ -55,7 +55,7 @@ class LightRepository(LightRepositoryProtocol):
         """
         response = await self._client.put(
             f"/clip/v2/resource/light/{light_id}",
-            body=update.model_dump(exclude_none=True)
+            body=update.model_dump(exclude_none=True),
         )
         return LightUpdateResponseDTO(**response)
 
@@ -71,6 +71,6 @@ class LightRepository(LightRepositoryProtocol):
         identify = LightIdentifyDTO(action="identify")
         response = await self._client.put(
             f"/clip/v2/resource/light/{light_id}",
-            body=identify.model_dump(exclude_none=True)
+            body=identify.model_dump(exclude_none=True),
         )
         return LightUpdateResponseDTO(**response)

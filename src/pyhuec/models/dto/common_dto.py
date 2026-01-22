@@ -9,8 +9,6 @@ from typing import Any, Dict, Generic, List, Optional, TypeVar
 from pydantic import BaseModel, ConfigDict, Field
 
 
-
-
 class ResourceIdentifierDTO(BaseModel):
     """Reference to another resource by ID and type."""
 
@@ -19,9 +17,6 @@ class ResourceIdentifierDTO(BaseModel):
         description="Resource type (light, room, scene, device, etc.)",
         pattern="^(device|bridge_home|room|zone|light|button|relative_rotary|temperature|light_level|motion|camera_motion|entertainment|contact|tamper|grouped_light|device_power|zigbee_bridge_connectivity|zgp_connectivity|zigbee_connectivity|zdp_connectivity|bridge|zigbee_device_discovery|homekit|matter|matter_fabric|scene|entertainment_configuration|public_image|auth_v1|behavior_script|behavior_instance|geofence|geofence_client|geolocation)$",
     )
-
-
-
 
 
 class ApiErrorDTO(BaseModel):
@@ -40,8 +35,6 @@ class ErrorResponseDTO(BaseModel):
     errors: List[ApiErrorDTO]
 
 
-
-
 T = TypeVar("T")
 
 
@@ -56,7 +49,7 @@ class SingleResourceResponseDTO(BaseModel, Generic[T]):
     """Response containing a single resource."""
 
     errors: List[ApiErrorDTO] = Field(default_factory=list)
-    data: List[T]  
+    data: List[T]
 
 
 class ResourceListResponseDTO(BaseModel, Generic[T]):
@@ -64,9 +57,6 @@ class ResourceListResponseDTO(BaseModel, Generic[T]):
 
     errors: List[ApiErrorDTO] = Field(default_factory=list)
     data: List[T]
-
-
-
 
 
 class ResourceDTO(BaseModel):
@@ -84,4 +74,3 @@ class ResourceCollectionDTO(BaseModel):
 
     errors: List[ApiErrorDTO] = Field(default_factory=list)
     data: List[ResourceDTO]
-

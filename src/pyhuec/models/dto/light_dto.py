@@ -8,8 +8,6 @@ from typing import Any, Dict, List, Optional
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
-
-
 class ResourceIdentifierDTO(BaseModel):
     """Reference to another resource by ID and type."""
 
@@ -232,9 +230,6 @@ class ProductDataDTO(BaseModel):
     function: Optional[str] = Field(None, pattern="^(functional|decorative|mixed)$")
 
 
-
-
-
 class LightUpdateDTO(BaseModel):
     """DTO for updating a light (PUT request)."""
 
@@ -264,9 +259,6 @@ class LightIdentifyDTO(BaseModel):
     action: str = Field(
         pattern="^(identify)$", description="Set to 'identify' to flash the light"
     )
-
-
-
 
 
 class LightResponseDTO(BaseModel):

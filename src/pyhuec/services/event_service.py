@@ -60,7 +60,6 @@ class EventService(EventServiceProtocol):
         await self._producer.start()
         await self._bus.start()
 
-        
         self._shutdown_event.clear()
         self._processing_task = asyncio.create_task(self._process_events())
 
@@ -137,10 +136,8 @@ class EventService(EventServiceProtocol):
                     break
 
                 try:
-                    
                     internal_events = await self._transformer.transform(raw_message)
 
-                    
                     for event in internal_events:
                         await self._bus.publish(event)
 

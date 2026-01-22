@@ -16,7 +16,7 @@ class RoomController(RoomControllerProtocol):
     def __init__(self, room_repository: RoomRepositoryProtocol) -> None:
         """
         Initialize room controller.
-        
+
         Args:
             room_repository: Repository for room data access
         """
@@ -25,10 +25,10 @@ class RoomController(RoomControllerProtocol):
     async def handle_get_room(self, room_id: str) -> RoomResponseDTO:
         """
         Handle GET /room/{id} request.
-        
+
         Args:
             room_id: UUID of the room
-            
+
         Returns:
             Room details
         """
@@ -37,7 +37,7 @@ class RoomController(RoomControllerProtocol):
     async def handle_get_rooms(self) -> RoomListResponseDTO:
         """
         Handle GET /room request.
-        
+
         Returns:
             List of all rooms
         """
@@ -46,10 +46,10 @@ class RoomController(RoomControllerProtocol):
     async def handle_create_room(self, create: RoomCreateDTO) -> RoomCreateResponseDTO:
         """
         Handle POST /room request.
-        
+
         Args:
             create: Room creation data
-            
+
         Returns:
             Creation response with new room ID
         """
@@ -60,11 +60,11 @@ class RoomController(RoomControllerProtocol):
     ) -> RoomUpdateResponseDTO:
         """
         Handle PUT /room/{id} request.
-        
+
         Args:
             room_id: UUID of the room
             update: Room update data
-            
+
         Returns:
             Update response
         """
@@ -73,10 +73,10 @@ class RoomController(RoomControllerProtocol):
     async def handle_delete_room(self, room_id: str) -> RoomDeleteResponseDTO:
         """
         Handle DELETE /room/{id} request.
-        
+
         Args:
             room_id: UUID of the room
-            
+
         Returns:
             Deletion response
         """

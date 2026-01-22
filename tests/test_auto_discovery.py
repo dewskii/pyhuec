@@ -104,15 +104,13 @@ class TestHueClientFactory:
             call_kwargs = mock_http.call_args.kwargs
             assert call_kwargs["base_url"] == "https://127.0.0.1"
             assert call_kwargs["verify"] is False
-            
-            
+
             mock_http_instance.set_auth_token.assert_called_with("test-key")
 
     @pytest.mark.asyncio
     async def test_create_client_auto_discovery(self):
         """Test client creation with auto-discovery."""
         with patch("pyhuec.hue_client_factory.MdnsClient") as mock_mdns_class:
-            
             mock_mdns = AsyncMock()
             mock_mdns.discover_bridges.return_value = [{"ip": "127.0.0.1"}]
             mock_mdns_class.return_value = mock_mdns
@@ -123,14 +121,13 @@ class TestHueClientFactory:
                     api_key="test-key",
                     enable_events=False,
                 )
-                
+
                 mock_mdns.discover_bridges.assert_called_once()
 
     @pytest.mark.asyncio
     async def test_create_client_no_bridge_found(self):
         """Test client creation fails when no bridge found."""
         with patch("pyhuec.hue_client_factory.MdnsClient") as mock_mdns_class:
-            
             mock_mdns = AsyncMock()
             mock_mdns.discover_bridges.return_value = []
             mock_mdns_class.return_value = mock_mdns
@@ -144,10 +141,11 @@ class TestHueClientFactory:
     @pytest.mark.asyncio
     async def test_create_client_auto_authenticate(self):
         """Test client creation with auto-authentication."""
-        
+
         with patch("pyhuec.hue_client_factory.os.getenv", return_value=None):
-            with patch("pyhuec.hue_client_factory.BridgeAuthenticator") as mock_auth_class:
-                
+            with patch(
+                "pyhuec.hue_client_factory.BridgeAuthenticator"
+            ) as mock_auth_class:
                 mock_auth = AsyncMock()
                 mock_auth.get_or_create_api_key.return_value = "generated-key"
                 mock_auth_class.return_value = mock_auth
@@ -155,12 +153,11 @@ class TestHueClientFactory:
                 with patch("pyhuec.hue_client_factory.HttpClient"):
                     client = await HueClientFactory.create_client(
                         bridge_ip="127.0.0.1",
-                        api_key=None,  
+                        api_key=None,
                         auto_authenticate=True,
                         enable_events=False,
                     )
 
-                    
                     mock_auth.get_or_create_api_key.assert_called_once()
                     mock_auth.close.assert_called_once()
 
@@ -175,7 +172,6 @@ class TestHueClientFactory:
                 mdns_timeout=10.0,
             )
 
-            
             mock_create.assert_called_once()
             call_kwargs = mock_create.call_args.kwargs
             assert call_kwargs["bridge_ip"] is None
@@ -189,34 +185,29 @@ class TestIntegrationFlow:
     @pytest.mark.asyncio
     async def test_full_auto_flow(self):
         """Test the complete automatic discovery and authentication flow."""
-        
+
         with (
             patch("pyhuec.hue_client_factory.os.getenv", return_value=None),
             patch("pyhuec.hue_client_factory.MdnsClient") as mock_mdns_class,
             patch("pyhuec.hue_client_factory.BridgeAuthenticator") as mock_auth_class,
             patch("pyhuec.hue_client_factory.HttpClient"),
         ):
-            
             mock_mdns = AsyncMock()
             mock_mdns.discover_bridges.return_value = [{"ip": "127.0.0.1"}]
             mock_mdns_class.return_value = mock_mdns
 
-            
             mock_auth = AsyncMock()
             mock_auth.get_or_create_api_key.return_value = "auto-generated-key"
             mock_auth_class.return_value = mock_auth
 
-            
             client = await HueClientFactory.create_client(
                 auto_authenticate=True,
                 enable_events=False,
             )
 
-            
             mock_mdns.discover_bridges.assert_called_once()
             mock_auth.get_or_create_api_key.assert_called_once()
             mock_auth.close.assert_called_once()
 
-            
             auth_call_args = mock_auth_class.call_args
             assert auth_call_args.kwargs["bridge_ip"] == "127.0.0.1"

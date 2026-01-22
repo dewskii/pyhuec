@@ -17,7 +17,7 @@ class SceneController(SceneControllerProtocol):
     def __init__(self, scene_repository: SceneRepositoryProtocol) -> None:
         """
         Initialize scene controller.
-        
+
         Args:
             scene_repository: Repository for scene data access
         """
@@ -26,10 +26,10 @@ class SceneController(SceneControllerProtocol):
     async def handle_get_scene(self, scene_id: str) -> SceneResponseDTO:
         """
         Handle GET /scene/{id} request.
-        
+
         Args:
             scene_id: UUID of the scene
-            
+
         Returns:
             Scene details
         """
@@ -38,7 +38,7 @@ class SceneController(SceneControllerProtocol):
     async def handle_get_scenes(self) -> SceneListResponseDTO:
         """
         Handle GET /scene request.
-        
+
         Returns:
             List of all scenes
         """
@@ -49,10 +49,10 @@ class SceneController(SceneControllerProtocol):
     ) -> SceneCreateResponseDTO:
         """
         Handle POST /scene request.
-        
+
         Args:
             create: Scene creation data
-            
+
         Returns:
             Creation response with new scene ID
         """
@@ -63,11 +63,11 @@ class SceneController(SceneControllerProtocol):
     ) -> SceneUpdateResponseDTO:
         """
         Handle PUT /scene/{id} request.
-        
+
         Args:
             scene_id: UUID of the scene
             update: Scene update data
-            
+
         Returns:
             Update response
         """
@@ -78,11 +78,11 @@ class SceneController(SceneControllerProtocol):
     ) -> SceneUpdateResponseDTO:
         """
         Handle PUT /scene/{id}/recall request.
-        
+
         Args:
             scene_id: UUID of the scene
             recall: Scene recall data
-            
+
         Returns:
             Update response
         """
@@ -91,10 +91,10 @@ class SceneController(SceneControllerProtocol):
     async def handle_delete_scene(self, scene_id: str) -> SceneDeleteResponseDTO:
         """
         Handle DELETE /scene/{id} request.
-        
+
         Args:
             scene_id: UUID of the scene
-            
+
         Returns:
             Deletion response
         """

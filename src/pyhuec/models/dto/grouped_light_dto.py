@@ -72,9 +72,6 @@ class DynamicsDTO(BaseModel):
     speed: Optional[float] = Field(None, ge=0.0, le=1.0)
 
 
-
-
-
 class GroupedLightUpdateDTO(BaseModel):
     """DTO for updating a grouped light (PUT request)."""
 
@@ -96,9 +93,6 @@ class GroupedLightIdentifyDTO(BaseModel):
         pattern="^(identify)$",
         description="Set to 'identify' to flash all lights in the group",
     )
-
-
-
 
 
 class GroupedLightResponseDTO(BaseModel):

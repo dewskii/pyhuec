@@ -23,7 +23,6 @@ class BridgeService(BridgeServiceProtocol):
             True if successful
         """
         try:
-            
             await self.bridge_repository.get_bridge_info()
             self._connected = True
             return True
@@ -52,7 +51,6 @@ class BridgeService(BridgeServiceProtocol):
             True if successful
         """
         try:
-            
             self._app_key = app_key
             await self.bridge_repository.get_bridge_config()
             self._authenticated = True
