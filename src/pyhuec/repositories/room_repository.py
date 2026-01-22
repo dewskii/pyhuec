@@ -53,8 +53,7 @@ class RoomRepository(RoomRepositoryProtocol):
             Created room ID
         """
         response = await self._client.post(
-            "/clip/v2/resource/room",
-            data=create.model_dump(exclude_none=True)
+            "/clip/v2/resource/room", data=create.model_dump(exclude_none=True)
         )
         return RoomCreateResponseDTO(**response)
 
@@ -72,7 +71,7 @@ class RoomRepository(RoomRepositoryProtocol):
         """
         response = await self._client.put(
             f"/clip/v2/resource/room/{room_id}",
-            data=update.model_dump(exclude_none=True)
+            data=update.model_dump(exclude_none=True),
         )
         return RoomUpdateResponseDTO(**response)
 

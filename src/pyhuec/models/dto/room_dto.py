@@ -26,9 +26,6 @@ class MetadataDTO(BaseModel):
     )
 
 
-
-
-
 class RoomCreateDTO(BaseModel):
     """DTO for creating a new room/zone (POST request)."""
 
@@ -50,9 +47,6 @@ class RoomUpdateDTO(BaseModel):
     )
 
     model_config = ConfigDict(extra="forbid")
-
-
-
 
 
 class RoomResponseDTO(BaseModel):

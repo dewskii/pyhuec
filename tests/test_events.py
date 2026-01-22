@@ -25,8 +25,6 @@ from pyhuec.services.event_service import EventService
 from pyhuec.services.event_transformer import EventTransformer
 
 
-
-
 class MockEventClient:
     """Mock SSE client for testing."""
 
@@ -46,7 +44,7 @@ class MockEventClient:
             if not self.connected:
                 break
             yield event
-            await asyncio.sleep(0.01)  
+            await asyncio.sleep(0.01)
 
     def is_connected(self) -> bool:
         return self.connected
@@ -74,9 +72,6 @@ class MockEventProducer:
                 break
             yield message
             await asyncio.sleep(0.01)
-
-
-
 
 
 @pytest.fixture
@@ -146,7 +141,6 @@ async def test_event_bus_publish_and_receive(sample_internal_event):
     bus = EventBus()
     await bus.start()
 
-    
     received_events = []
 
     async def handler(event):
@@ -155,7 +149,6 @@ async def test_event_bus_publish_and_receive(sample_internal_event):
     await bus.subscribe(handler)
     await bus.publish(sample_internal_event)
 
-    
     await asyncio.sleep(0.1)
 
     assert len(received_events) == 1
@@ -169,7 +162,7 @@ async def test_event_bus_filtering(sample_internal_event):
     """Test event filtering."""
     bus = EventBus()
     await bus.start()
-    
+
     light_events = []
 
     async def light_handler(event):
@@ -178,10 +171,8 @@ async def test_event_bus_filtering(sample_internal_event):
     light_filter = EventFilterDTO(resource_types=[ResourceType.LIGHT])
     await bus.subscribe(light_handler, light_filter)
 
-    
     await bus.publish(sample_internal_event)
 
-    
     motion_event = InternalEventDTO(
         event_id="motion-123",
         event_type=EventType.UPDATE,
@@ -197,7 +188,6 @@ async def test_event_bus_filtering(sample_internal_event):
 
     await asyncio.sleep(0.1)
 
-    
     assert len(light_events) == 1
     assert light_events[0].resource_type == ResourceType.LIGHT
 
@@ -218,7 +208,7 @@ async def test_event_bus_multiple_handlers(sample_internal_event):
     async def handler2(event):
         received_by.append("handler2")
 
-    def handler3(event):  
+    def handler3(event):
         received_by.append("handler3")
 
     await bus.subscribe(handler1)
@@ -249,11 +239,9 @@ async def test_event_bus_unsubscribe():
 
     subscription = await bus.subscribe(handler)
 
-    
     result = await bus.unsubscribe(subscription.subscription_id)
     assert result is True
 
-    
     event = InternalEventDTO(
         event_id="test",
         event_type=EventType.UPDATE,
@@ -271,9 +259,6 @@ async def test_event_bus_unsubscribe():
     assert len(received) == 0
 
     await bus.stop()
-
-
-
 
 
 @pytest.mark.asyncio
@@ -294,9 +279,6 @@ async def test_event_transformer(sample_sse_message):
     assert event.data.type == ResourceType.LIGHT
 
 
-
-
-
 @pytest.mark.asyncio
 async def test_event_service_start_stop(sample_sse_message):
     """Test starting and stopping event service."""
@@ -306,11 +288,9 @@ async def test_event_service_start_stop(sample_sse_message):
 
     service = EventService(mock_producer, transformer, bus)
 
-    
     await service.start_event_stream()
     assert service.is_streaming()
 
-    
     await service.stop_event_stream()
     assert not service.is_streaming()
 
@@ -328,16 +308,12 @@ async def test_event_service_end_to_end(sample_sse_message):
     async def handler(event):
         received_events.append(event)
 
-    
     await service.start_event_stream()
 
-    
     await service.subscribe_to_events(handler)
 
-    
     await asyncio.sleep(0.2)
 
-    
     assert len(received_events) > 0
     assert received_events[0].event_type == EventType.UPDATE
 
@@ -354,31 +330,25 @@ async def test_event_service_subscription_management():
 
     await service.start_event_stream()
 
-    
     async def handler(event):
         pass
 
     sub_id = await service.subscribe_to_events(handler)
     assert sub_id is not None
 
-    
     result = await service.unsubscribe_from_events(sub_id)
     assert result is True
 
-    
     result = await service.unsubscribe_from_events(sub_id)
     assert result is False
 
     await service.stop_event_stream()
 
 
-
-
-
 @pytest.mark.asyncio
 async def test_complete_event_workflow():
     """Complete integration test of event system."""
-    
+
     event_dto = EventDTO(
         creationtime=datetime.now(timezone.utc),
         id="test-event",
@@ -403,29 +373,24 @@ async def test_complete_event_workflow():
         timestamp=datetime.now(timezone.utc),
     )
 
-    
     producer = MockEventProducer([sse_message])
     transformer = EventTransformer()
     bus = EventBus()
     service = EventService(producer, transformer, bus)
 
-    
     light_events = []
 
     async def light_handler(event):
         light_events.append(event)
 
-    
     await service.start_event_stream()
 
     light_filter = EventFilterDTO(resource_types=[ResourceType.LIGHT])
     await service.subscribe_to_events(light_handler, light_filter)
 
-    
     await asyncio.sleep(0.2)
 
-    
-    assert len(light_events) == 2  
+    assert len(light_events) == 2
     assert all(e.resource_type == ResourceType.LIGHT for e in light_events)
     assert light_events[0].resource_id == "light-1"
     assert light_events[1].resource_id == "light-2"

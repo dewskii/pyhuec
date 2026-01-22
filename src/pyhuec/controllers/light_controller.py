@@ -13,7 +13,7 @@ class LightController(LightControllerProtocol):
     def __init__(self, light_repository: LightRepositoryProtocol) -> None:
         """
         Initialize light controller.
-        
+
         Args:
             light_repository: Repository for light data access
         """
@@ -22,10 +22,10 @@ class LightController(LightControllerProtocol):
     async def handle_get_light(self, light_id: str) -> LightResponseDTO:
         """
         Handle GET /light/{id} request.
-        
+
         Args:
             light_id: UUID of the light
-            
+
         Returns:
             Light details
         """
@@ -34,7 +34,7 @@ class LightController(LightControllerProtocol):
     async def handle_get_lights(self) -> LightListResponseDTO:
         """
         Handle GET /light request.
-        
+
         Returns:
             List of all lights
         """
@@ -45,11 +45,11 @@ class LightController(LightControllerProtocol):
     ) -> LightUpdateResponseDTO:
         """
         Handle PUT /light/{id} request.
-        
+
         Args:
             light_id: UUID of the light
             update: Light update data
-            
+
         Returns:
             Update response
         """
@@ -58,10 +58,10 @@ class LightController(LightControllerProtocol):
     async def handle_identify_light(self, light_id: str) -> LightUpdateResponseDTO:
         """
         Handle PUT /light/{id}/identify request.
-        
+
         Args:
             light_id: UUID of the light
-            
+
         Returns:
             Update response
         """

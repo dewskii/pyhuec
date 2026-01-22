@@ -49,8 +49,7 @@ class EventBus(EventBusProtocol):
         logger.info("Stopping event bus")
         self._is_running = False
 
-        
-        await self._event_queue.put(None)  
+        await self._event_queue.put(None)
 
         if self._dispatch_task:
             try:
@@ -63,7 +62,6 @@ class EventBus(EventBusProtocol):
                 except asyncio.CancelledError:
                     pass
 
-        
         self._subscriptions.clear()
 
     def is_running(self) -> bool:
@@ -137,11 +135,9 @@ class EventBus(EventBusProtocol):
             while self._is_running:
                 event = await self._event_queue.get()
 
-                
                 if event is None:
                     break
 
-                
                 await self._dispatch_event(event)
 
         except Exception as e:
@@ -159,17 +155,14 @@ class EventBus(EventBusProtocol):
         tasks = []
 
         for subscription_id, (handler, event_filter) in self._subscriptions.items():
-            
             if not self._matches_filter(event, event_filter):
                 continue
 
-            
             task = asyncio.create_task(
                 self._invoke_handler(subscription_id, handler, event)
             )
             tasks.append(task)
 
-        
         if tasks:
             await asyncio.gather(*tasks, return_exceptions=True)
 
@@ -189,21 +182,18 @@ class EventBus(EventBusProtocol):
         if event_filter is None:
             return True
 
-        
         if (
             event_filter.event_types
             and event.event_type not in event_filter.event_types
         ):
             return False
 
-        
         if (
             event_filter.resource_types
             and event.resource_type not in event_filter.resource_types
         ):
             return False
 
-        
         if (
             event_filter.resource_ids
             and event.resource_id not in event_filter.resource_ids

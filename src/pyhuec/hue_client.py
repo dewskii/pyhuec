@@ -155,9 +155,7 @@ class HueClient:
         response = await self._light_repo.get_light(light_id)
 
         if self._state_manager:
-            self._state_manager.update_from_rest(
-                ResourceType.LIGHT, light_id, response
-            )
+            self._state_manager.update_from_rest(ResourceType.LIGHT, light_id, response)
 
         return response
 

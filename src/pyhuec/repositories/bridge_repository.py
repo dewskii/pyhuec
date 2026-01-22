@@ -56,5 +56,7 @@ class BridgeRepository(BridgeRepositoryProtocol):
         Returns:
             Resource details
         """
-        response = await self.http_client.get(f"/resource/{resource_type}/{resource_id}")
+        response = await self.http_client.get(
+            f"/resource/{resource_type}/{resource_id}"
+        )
         return ResourceDTO(**response)

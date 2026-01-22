@@ -111,9 +111,6 @@ class PaletteDTO(BaseModel):
     dimming: Optional[List[DimmingDTO]] = None
 
 
-
-
-
 class SceneCreateDTO(BaseModel):
     """DTO for creating a new scene (POST request)."""
 
@@ -158,9 +155,6 @@ class SceneRecallDTO(BaseModel):
     dimming: Optional[DimmingDTO] = Field(None, description="Override scene brightness")
 
     model_config = ConfigDict(extra="forbid")
-
-
-
 
 
 class SceneStatusDTO(BaseModel):

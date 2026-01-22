@@ -5,9 +5,9 @@ Handles dependency injection and wiring of all components.
 Supports automatic bridge discovery and authentication.
 """
 
-from email.mime import base
 import logging
 import os
+from email.mime import base
 from pathlib import Path
 from typing import Optional
 
@@ -30,6 +30,7 @@ from pyhuec.transport.mdns_client import MdnsClient
 logger = logging.getLogger(__name__)
 
 load_dotenv()
+
 
 class HueClientFactory:
     """
@@ -94,9 +95,9 @@ class HueClientFactory:
                 load_dotenv(env_file)
             else:
                 load_dotenv()
-            
+
             api_key = os.getenv("HUE_USER")
-            
+
             if api_key:
                 logger.info("Loaded API key from environment")
             elif auto_authenticate:
@@ -124,11 +125,7 @@ class HueClientFactory:
 
         base_url = f"https://{bridge_ip}"
 
-        http_client = HttpClient(
-            base_url=base_url,
-            timeout=http_timeout,
-            verify=False
-        )
+        http_client = HttpClient(base_url=base_url, timeout=http_timeout, verify=False)
         http_client.set_auth_token(api_key)
 
         light_repo = LightRepository(http_client=http_client)

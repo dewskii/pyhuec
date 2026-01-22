@@ -67,7 +67,6 @@ class BridgeAuthenticator:
         else:
             load_dotenv()
 
-
         if api_key:
             logger.info("Found existing API key in environment")
             if await self._validate_api_key(api_key):

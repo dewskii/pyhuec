@@ -19,9 +19,7 @@ class HttpClient(HttpClientProtocol):
             self.client = client
         else:
             self.client = httpx.AsyncClient(
-                verify=verify,
-                timeout=httpx.Timeout(timeout),
-                follow_redirects=True
+                verify=verify, timeout=httpx.Timeout(timeout), follow_redirects=True
             )
         self.base_url = base_url
         self._auth_token: Optional[str] = None
@@ -63,9 +61,9 @@ class HttpClient(HttpClientProtocol):
             Response data as dictionary
         """
         response = await self.client.get(
-            url=f"{self.base_url}{endpoint}", 
-            params=params, 
-            headers=self._get_headers(headers)
+            url=f"{self.base_url}{endpoint}",
+            params=params,
+            headers=self._get_headers(headers),
         )
         return response.json()
 
@@ -88,10 +86,10 @@ class HttpClient(HttpClientProtocol):
             Response data as dictionary
         """
         response = await self.client.post(
-            url=f"{self.base_url}{endpoint}", 
-            params=params, 
-            headers=self._get_headers(headers), 
-            json=body
+            url=f"{self.base_url}{endpoint}",
+            params=params,
+            headers=self._get_headers(headers),
+            json=body,
         )
         return response.json()
 
@@ -114,10 +112,10 @@ class HttpClient(HttpClientProtocol):
             Response data as dictionary
         """
         response = await self.client.put(
-            url=f"{self.base_url}{endpoint}", 
-            params=params, 
-            headers=self._get_headers(headers), 
-            json=body
+            url=f"{self.base_url}{endpoint}",
+            params=params,
+            headers=self._get_headers(headers),
+            json=body,
         )
         return response.json()
 

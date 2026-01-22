@@ -54,8 +54,7 @@ class SceneRepository(SceneRepositoryProtocol):
             Created scene ID
         """
         response = await self._client.post(
-            "/clip/v2/resource/scene",
-            data=create.model_dump(exclude_none=True)
+            "/clip/v2/resource/scene", data=create.model_dump(exclude_none=True)
         )
         return SceneCreateResponseDTO(**response)
 
@@ -73,7 +72,7 @@ class SceneRepository(SceneRepositoryProtocol):
         """
         response = await self._client.put(
             f"/clip/v2/resource/scene/{scene_id}",
-            data=update.model_dump(exclude_none=True)
+            data=update.model_dump(exclude_none=True),
         )
         return SceneUpdateResponseDTO(**response)
 
@@ -91,7 +90,7 @@ class SceneRepository(SceneRepositoryProtocol):
         """
         response = await self._client.put(
             f"/clip/v2/resource/scene/{scene_id}",
-            data=recall.model_dump(exclude_none=True)
+            data=recall.model_dump(exclude_none=True),
         )
         return SceneUpdateResponseDTO(**response)
 
