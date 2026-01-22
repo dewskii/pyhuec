@@ -18,11 +18,11 @@ async def main():
         logger.info(f"Found {len(lights.data)} lights")
 
         if lights.data:
-            light = lights.data[0]
-            logger.info(
-                f"Turning on: {light.metadata.name if light.metadata else light.id}"
-            )
-            await client.turn_on_light(light.id, brightness=100)
+            for light in lights.data:
+                logger.info(
+                    f"Turning on: {light.metadata.name if light.metadata else light.id}"
+                )
+                await client.turn_on_light(light.id, brightness=100)
 
         logger.info("Starting event stream (Press Ctrl-C to stop)...")
         await client.start_event_stream()
@@ -41,9 +41,6 @@ async def main():
         await client.stop_event_stream()
     except Exception as e:
         logger.error(f"Error: {e}")
-        import traceback
-
-        traceback.print_exc()
 
 
 if __name__ == "__main__":

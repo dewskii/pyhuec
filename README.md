@@ -132,5 +132,10 @@ Any additional dev/testing dependencies should be add to the dev group.
 ❯ uv add <some-dev-package> --dev
 ```
 
+Build the project
+```
+❯ uv build
+```
+
 
 
