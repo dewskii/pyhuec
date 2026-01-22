@@ -21,24 +21,22 @@ import asyncio
 from pyhuec.hue_client_factory import HueClientFactory
 
 async def main():
-    # use HueClientFactory.create_client(auto_authenticate=False)
-    # to disable auto fetching api key
-    client = await HueClientFactory.create_client()
-    
-    await client.start_event_stream()
-    # Enable in memory caching, optional
-    await client.initialize_cache()
-    
+    try:
+        logger.info("Connecting to Hue Bridge...")
+        client = await HueClientFactory.create_client()
 
-    lights = await client.get_lights()
-    await client.turn_on_light(lights[0].id, brightness=100)
-    
-    # Get events from bridge and update state
-    await client.subscribe_to_light_events(
-        lambda event: print(f"Light changed: {event}")
-    )
-    
-    await client.stop_event_stream()
+        logger.info("Fetching lights...")
+        lights = await client.get_lights()
+        logger.info(f"Found {len(lights.data)} lights")
+
+        if lights.data:
+            for light in lights.data:
+                logger.info(
+                    f"Turning on: {light.metadata.name if light.metadata else light.id}"
+                )
+                await client.turn_on_light(light.id, brightness=75)
+    except Exception as e:
+        logger.exception(e)
 
 asyncio.run(main())
 ```
