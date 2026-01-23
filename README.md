@@ -23,7 +23,7 @@ from pyhuec.hue_client_factory import HueClientFactory
 async def main():
     try:
         logger.info("Connecting to Hue Bridge...")
-        client = await HueClientFactory.create_client()
+        client = await HueClientFactory.create_client(enable_events=True)
 
         logger.info("Fetching lights...")
         lights = await client.get_lights()

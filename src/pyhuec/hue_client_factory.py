@@ -6,8 +6,6 @@ Supports automatic bridge discovery and authentication.
 """
 
 import logging
-import os
-from email.mime import base
 from pathlib import Path
 from typing import Optional
 
@@ -45,7 +43,7 @@ class HueClientFactory:
     async def create_client(
         bridge_ip: Optional[str] = None,
         api_key: Optional[str] = None,
-        enable_events: bool = True,
+        enable_events: bool = False,
         enable_cache: bool = True,
         auto_sync: bool = True,
         event_timeout: Optional[float] = None,
