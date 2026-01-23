@@ -42,7 +42,7 @@ asyncio.run(main())
 ```
 
 > [!NOTE]
-> More example code can be found in [example.py](example.py)
+> More example code can be found in [examples/](examples/)
 
 On first run, you'll be prompted to press the button on your bridge. The API key is saved automatically for future use.
 
