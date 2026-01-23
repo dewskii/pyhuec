@@ -6,7 +6,7 @@ Python client for interfacing with Philips Hue API v2, supports REST and Event s
 > [!NOTE]
 > This is very much a work in progress. Expect bugs and the like
 
-## What's it do?
+## Features
 
 - **Auto-Discovery** - Automatically finds your Hue Bridge on the network  
 - **Auto-Authentication** - Generates and saves API keys with guided setup  
@@ -79,36 +79,8 @@ This project using uv for handling dependencies and build scripts. See [Instruct
 >[!Note]
 > This client *only* uses mDNS for automatic bridge discovery. If you are having trouble finding your bridge with mDNS, feel free to follow [Hue's guide](https://developers.meethue.com/develop/get-started-2/#follow-3-easy-steps) on finding your bridge ip.
 
-### Automatic Setup (Recommended)
-
-The easiest way is to let pyhuec handle everything:
-
-```python
-client = await HueClientFactory.create_client(auto_authenticate=True)
-```
-
-This will:
-1. Discover your bridge via mDNS
-2. Check for existing API key in `.env` file
-3. Prompt you to press the bridge button if needed
-4. Generate and save a new API key
-5. Connect to your bridge automatically
-
-## Manual Setup
-
-If you prefer manual configuration:
-
-```python
-client = await HueClientFactory.create_client(
-    bridge_ip="<bridge-ip-address>",
-    api_key="<your-api-key-here>"
-)
-```
-
 ### Environment Variables
-
-Set these in your `.env` file:
-
+If you already have a hue key, setting it in your dotenv will get picked up by the client
 ```bash
 HUE_USER=your-api-key-here
 TARGET_MDNS=_hue._tcp.local.  # Optional, has default
