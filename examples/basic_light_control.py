@@ -25,7 +25,7 @@ async def main():
             first_light.metadata.name if first_light.metadata else first_light.id
         )
 
-        logger.info(f"\nTurning on {light_name} at 50% brightness...")
+        logger.info(f"Turning on {light_name} at 50% brightness...")
         await client.turn_on_light(first_light.id, brightness=50.0)
 
         await asyncio.sleep(2)

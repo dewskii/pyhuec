@@ -30,13 +30,13 @@ async def main():
     if light_detail.color_temperature:
         logger.info(f"  Color Temp: {light_detail.color_temperature.mirek} mirek")
 
-    logger.info(f"\nFlashing {light_name} to identify it...")
+    logger.info(f"Flashing {light_name} to identify it...")
     await client.identify_light(first_light.id)
 
     await asyncio.sleep(3)
 
     if light_detail.color_temperature:
-        logger.info(f"\nSetting {light_name} to warm white...")
+        logger.info(f"etting {light_name} to warm white...")
         update = LightUpdateDTO(
             on={"on": True}, color_temperature=ColorTemperatureDTO(mirek=400)
         )

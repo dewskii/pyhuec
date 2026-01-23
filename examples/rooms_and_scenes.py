@@ -18,7 +18,7 @@ async def main():
         name = room.metadata.name if room.metadata else room.id
         logger.info(f"  - {name}")
 
-    logger.info("\nFetching scenes...")
+    logger.info("Fetching scenes...")
     scenes = await client.get_scenes()
     logger.info(f"Found {len(scenes.data)} scenes:")
 
@@ -32,7 +32,7 @@ async def main():
             first_scene.metadata.name if first_scene.metadata else first_scene.id
         )
 
-        logger.info(f"\nActivating scene: {scene_name}...")
+        logger.info(f"Activating scene: {scene_name}...")
         await client.recall_scene(first_scene.id)
         logger.info("Scene activated!")
 
