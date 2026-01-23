@@ -141,8 +141,9 @@ class TestHueClientFactory:
     @pytest.mark.asyncio
     async def test_create_client_auto_authenticate(self):
         """Test client creation with auto-authentication."""
-
-        with patch("pyhuec.hue_client_factory.os.getenv", return_value=None):
+        with patch(
+            "pyhuec.transport.bridge_authenticator.os.getenv", return_value=None
+        ):
             with patch(
                 "pyhuec.hue_client_factory.BridgeAuthenticator"
             ) as mock_auth_class:
@@ -185,9 +186,8 @@ class TestIntegrationFlow:
     @pytest.mark.asyncio
     async def test_full_auto_flow(self):
         """Test the complete automatic discovery and authentication flow."""
-
         with (
-            patch("pyhuec.hue_client_factory.os.getenv", return_value=None),
+            patch("pyhuec.transport.bridge_authenticator.os.getenv", return_value=None),
             patch("pyhuec.hue_client_factory.MdnsClient") as mock_mdns_class,
             patch("pyhuec.hue_client_factory.BridgeAuthenticator") as mock_auth_class,
             patch("pyhuec.hue_client_factory.HttpClient"),
